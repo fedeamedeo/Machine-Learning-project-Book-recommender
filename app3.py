@@ -28,12 +28,11 @@ recs_df, items_df, interactions_df = load_data()
 st.sidebar.title("Book Recommendations")
 st.sidebar.image("https://media.istockphoto.com/id/1210557301/photo/magic-book-open.jpg?s=612x612&w=0&k=20&c=2T9x_Z_by3QEeo2DdPOapMUi545Zi10V-eDwg6ToUoI=", width=300)
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
-st.sidebar.markdown("Select a user to see their personalized book recommendations.")
 st.sidebar.markdown("You can also search for books by title, author, or subject.")
 st.sidebar.markdown("⭐ Save your favorite books to revisit later.")
 st.sidebar.markdown("📚 Browse by genre to discover new books.")
 
-st.sidebar.markdown("Chat with the system to get personalized book recommendations using precomputed TF-IDF matches.")
+t.sidebar.markdown("Select your Personal Library User Id user to see book recommendations just for you.")
 st.session_state.selected_user = st.sidebar.selectbox("Select a User ID", recs_df['user_id'].unique(), index=0, key="user_select")
 
 if st.sidebar.button("Show Recommendations", key="sidebar_show_recs"):
