@@ -57,9 +57,8 @@ if st.sidebar.button("Show Recommendations", key="sidebar_show_recs"):
     else:
         st.warning("No recommendations found for this user.")
 st.sidebar.markdown("---")
-st.sidebar.markdown("1.You can search for books by title, author, or subject.")
-st.sidebar.markdown("2.Browse by genre to discover new books.")
-st.sidebar.markdown("3.Save your favorite books to revisit later.")
+st.sidebar.markdown("You can search for books by title, author, or subject. Browse by genre to discover new books and save your favorite books to revisit later")
+
 
 st.sidebar.subheader("📖 Pick a Book Title")
 book_titles = items_df['Title'].dropna().unique()
