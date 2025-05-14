@@ -183,4 +183,3 @@ for subject in top_subjects:
                     st.session_state.favorites.append(row['i'])
 
 
-STARTING CODE 
