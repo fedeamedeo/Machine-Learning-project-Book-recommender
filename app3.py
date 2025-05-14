@@ -171,7 +171,7 @@ if st.session_state.favorites:
                 st.image(row['cover_url'], width=120)
                 st.markdown(f"**{row['Title']}**")
                 st.caption(row['Author'])
-                if pd.notna(row.get('Subjects')):
+                
                     
                 with col1:
                     if row.get('link'):
