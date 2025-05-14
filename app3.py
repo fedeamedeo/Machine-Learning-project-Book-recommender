@@ -71,7 +71,6 @@ if selected_book:
     if st.button("❤️ Save to Favorites", key=f"select_{book_info['i']}"):
         if book_info['i'] not in st.session_state.favorites:
             st.session_state.favorites.append(book_info['i'])
-# ---------- SELECT BOOK FROM DROPDOWN ----------
 
 
 
