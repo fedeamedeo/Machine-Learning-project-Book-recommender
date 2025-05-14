@@ -173,6 +173,7 @@ if st.session_state.favorites:
                     if st.button("❤️", key=f"fav_{row['i']}"):
                         if row['i'] not in st.session_state.favorites:
                             st.session_state.favorites.append(row['i'])
+                            
 
 # ------------------ MOST POPULAR ------------------
 st.title("📚 Book Recommendation System")
