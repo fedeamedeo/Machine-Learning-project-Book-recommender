@@ -1,10 +1,25 @@
 import streamlit as st
 import pandas as pd
-import os
-import webbrowser
 
 # ---------- CONFIG ----------
 st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_sidebar_state="expanded")
+
+# ---------- GLOBAL STYLES ----------
+st.markdown("""
+    <style>
+        .grey-button {
+            background-color: #e0e0e0 !important;
+            color: black !important;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .grey-button:hover {
+            background-color: #d5d5d5 !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # ---------- SESSION STATE ----------
 if "messages" not in st.session_state:
@@ -29,8 +44,7 @@ st.sidebar.title("Book Recommendations")
 st.sidebar.image("https://media.istockphoto.com/id/1210557301/photo/magic-book-open.jpg?s=612x612&w=0&k=20&c=2T9x_Z_by3QEeo2DdPOapMUi545Zi10V-eDwg6ToUoI=", width=300)
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
 
-
-st.sidebar.markdown("Select your Personal Library User Id user to see book recommendations just for you.")
+st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 st.session_state.selected_user = st.sidebar.selectbox("User ID", recs_df['user_id'].unique(), index=0, key="user_select")
 
 if st.sidebar.button("Show Recommendations", key="sidebar_show_recs"):
@@ -45,29 +59,37 @@ if st.sidebar.button("Show Recommendations", key="sidebar_show_recs"):
         for i, (_, row) in enumerate(recommended_books.iterrows()):
             interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
             with cols[i % 5]:
-                st.image(row['cover_url'], width=100)
-                st.markdown(f"**{row['Title']}**")
-                st.caption(row['Author'])
-                st.caption(f"👥 {interactions_count} interactions")
-                if row.get('link'):
-                    st.link_button("🔗 Open Link", row['link'], use_container_width=True)
-                if st.button("❤️ Save", key=f"rec_{row['i']}"):
-                    if row['i'] not in st.session_state.favorites:
-                        st.session_state.favorites.append(row['i'])
+                with st.container(border=True):
+                    st.image(row['cover_url'], width=120)
+                    st.markdown(f"**{row['Title']}**")
+                    st.caption(row['Author'])
+                    if pd.notna(row.get('Subjects')) and isinstance(row['Subjects'], str):
+                        subject = row['Subjects'].split(',')[0]
+                        st.markdown(f"`{subject.strip()}`")
+                    st.caption(f"👥 {interactions_count} interactions")
+                    col1, col2 = st.columns([1, 1])
+                    with col1:
+                        if row.get('link'):
+                            st.markdown(f"""
+                                <a href="{row['link']}" target="_blank">
+                                    <button class="grey-button" style="width: 100%">🔗</button>
+                                </a>
+                            """, unsafe_allow_html=True)
+                    with col2:
+                        if st.button("❤️", key=f"rec_{row['i']}"):
+                            if row['i'] not in st.session_state.favorites:
+                                st.session_state.favorites.append(row['i'])
     else:
         st.warning("No recommendations found for this user.")
-st.sidebar.markdown("---")
-st.sidebar.markdown("You can search for books by title, author, or subject. Browse by genre to discover new books and save your favorite books to revisit later")
 
+st.sidebar.markdown("---")
+st.sidebar.markdown("You can also search for books by title, author, or subject.")
+st.sidebar.markdown("📚 Browse by genre to discover new books.")
+st.sidebar.markdown("⭐ Save your favorite books to revisit later.")
 
 st.sidebar.subheader("📖 Pick a Book Title")
 book_titles = items_df['Title'].dropna().unique()
-selected_book = st.sidebar.selectbox(
-    "Type or select a book from the dropdown", 
-    sorted(book_titles), 
-    key="book_select"
-)
-
+selected_book = st.sidebar.selectbox("Type or select a book from the dropdown", sorted(book_titles), key="book_select")
 if st.sidebar.button("View Book Details", key="view_book_details"):
     book_info = items_df[items_df['Title'] == selected_book].iloc[0]
     interactions_count = interactions_df[interactions_df['i'] == book_info['i']].shape[0]
@@ -84,8 +106,6 @@ if st.sidebar.button("View Book Details", key="view_book_details"):
         if book_info['i'] not in st.session_state.favorites:
             st.session_state.favorites.append(book_info['i'])
 
-
-
 # ---------- SEARCH BAR ----------
 st.title("🔍 Search the Book Database")
 search_query = st.text_input("Search for a book by title, author, or subject:")
@@ -100,12 +120,26 @@ if search_query:
     for i, (_, row) in enumerate(results.head(15).iterrows()):
         interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
         with cols[i % 5]:
-            st.image(row.get('cover_url', "https://via.placeholder.com/128x195.png?text=No+Image"), width=100)
-            st.markdown(f"**{row['Title']}**")
-            st.caption(row['Author'])
-            st.caption(f"👥 {interactions_count} interactions")
-            if row.get('link'):
-                st.link_button("🔗 Open Link", row['link'], use_container_width=True)
+            with st.container(border=True):
+                st.image(row.get('cover_url', "https://via.placeholder.com/128x195.png?text=No+Image"), width=120)
+                st.markdown(f"**{row['Title']}**")
+                st.caption(row['Author'])
+                if pd.notna(row.get('Subjects')) and isinstance(row['Subjects'], str):
+                    subject = row['Subjects'].split(',')[0]
+                    st.markdown(f"`{subject.strip()}`")
+                st.caption(f"👥 {interactions_count} interactions")
+                col1, col2 = st.columns([1, 1])
+                with col1:
+                    if row.get('link'):
+                        st.markdown(f"""
+                            <a href="{row['link']}" target="_blank">
+                                <button class="grey-button" style="width: 100%">🔗</button>
+                            </a>
+                        """, unsafe_allow_html=True)
+                with col2:
+                    if st.button("❤️", key=f"search_{row['i']}"):
+                        if row['i'] not in st.session_state.favorites:
+                            st.session_state.favorites.append(row['i'])
 
 # ------------------ FAVORITES SECTION ------------------
 if st.session_state.favorites:
@@ -119,57 +153,46 @@ if st.session_state.favorites:
     for i, (_, row) in enumerate(fav_books.iterrows()):
         interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
         with cols[i % 5]:
-            st.image(row['cover_url'], width=100)
-            st.markdown(f"**{row['Title']}**")
-            st.caption(row['Author'])
-            st.caption(f"👥 {interactions_count} interactions")
-            if row.get('link'):
-                st.link_button("🔗 Open Link", row['link'], use_container_width=True)
+            with st.container(border=True):
+                st.image(row['cover_url'], width=120)
+                st.markdown(f"**{row['Title']}**")
+                st.caption(row['Author'])
+                if pd.notna(row.get('Subjects')) and isinstance(row['Subjects'], str):
+                    subject = row['Subjects'].split(',')[0]
+                    st.markdown(f"`{subject.strip()}`")
+                st.caption(f"👥 {interactions_count} interactions")
+                col1, col2 = st.columns([1, 1])
+                with col1:
+                    if row.get('link'):
+                        st.markdown(f"""
+                            <a href="{row['link']}" target="_blank">
+                                <button class="grey-button" style="width: 100%">🔗</button>
+                            </a>
+                        """, unsafe_allow_html=True)
+                with col2:
+                    if st.button("❤️", key=f"fav_{row['i']}"):
+                        if row['i'] not in st.session_state.favorites:
+                            st.session_state.favorites.append(row['i'])
 
-# ------------------ MOST POPULAR ------------------
 # ------------------ MOST POPULAR ------------------
 st.title("📚 Book Recommendation System")
 st.header("🔥 Most Popular Books")
 
-# Add custom CSS to style buttons
-st.markdown("""
-    <style>
-        .grey-button {
-            background-color: #e0e0e0 !important;
-            color: #000000 !important;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .grey-button:hover {
-            background-color: #d5d5d5 !important;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = items_df[items_df['i'].isin(popular_ids)]
 
-num_columns = 5
-cols = st.columns(num_columns)
-
-for idx, (_, row) in enumerate(popular_books.iterrows()):
+cols = st.columns(5)
+for i, (_, row) in enumerate(popular_books.iterrows()):
     interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
-
-    with cols[idx % num_columns]:
+    with cols[i % 5]:
         with st.container(border=True):
             st.image(row['cover_url'], width=120)
             st.markdown(f"**{row['Title']}**")
             st.caption(row['Author'])
-
             if pd.notna(row.get('Subjects')) and isinstance(row['Subjects'], str):
-                main_subject = row['Subjects'].split(',')[0]
-                st.markdown(f"`{main_subject.strip()}`")
-
+                subject = row['Subjects'].split(',')[0]
+                st.markdown(f"`{subject.strip()}`")
             st.caption(f"👥 {interactions_count} interactions")
-
-            # Buttons styled with HTML links as workaround for custom styling
             col1, col2 = st.columns([1, 1])
             with col1:
                 if row.get('link'):
@@ -178,33 +201,8 @@ for idx, (_, row) in enumerate(popular_books.iterrows()):
                             <button class="grey-button" style="width: 100%">🔗</button>
                         </a>
                     """, unsafe_allow_html=True)
-
             with col2:
                 if st.button("❤️", key=f"pop_{row['i']}"):
-                    if row['i'] not in st.session_state.favorites:
-                        st.session_state.favorites.append(row['i'])
-
-# ------------------ BROWSE BY GENRE ------------------
-st.header("📚 Browse by Genre")
-
-top_subjects = ["Mangas", "Roman", "Sciences", "Fantasy", "Histoire"]
-
-for subject in top_subjects:
-    st.subheader(f"📖 {subject}")
-    subject_books = items_df[
-        items_df['Subjects'].str.contains(subject, case=False, na=False)
-    ].head(5)
-
-    cols = st.columns(5)
-    for i, (_, row) in enumerate(subject_books.iterrows()):
-        interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
-        with cols[i % 5]:
-            st.image(row['cover_url'], width=100)
-            st.markdown(f"**{row['Title']}**")
-            st.caption(row['Author'])
-            st.caption(f"👥 {interactions_count} interactions")
-            if row.get('link'):
-                st.link_button("🔗 Open Link", row['link'], use_container_width=True)
-            if st.button("❤️ Save", key=f"genre_{row['i']}"):
-                if row['i'] not in st.session_state.favorites:
-                    st.session_state.favorites.append(row['i'])
+                    if row['i'] not in st.session
+::contentReference[oaicite:1]{index=1}
+ 
