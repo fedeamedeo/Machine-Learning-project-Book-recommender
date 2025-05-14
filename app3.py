@@ -32,7 +32,7 @@ st.sidebar.markdown("You can also search for books by title, author, or subject.
 st.sidebar.markdown("⭐ Save your favorite books to revisit later.")
 st.sidebar.markdown("📚 Browse by genre to discover new books.")
 
-t.sidebar.markdown("Select your Personal Library User Id user to see book recommendations just for you.")
+st.sidebar.markdown("Select your Personal Library User Id user to see book recommendations just for you.")
 st.session_state.selected_user = st.sidebar.selectbox("Select a User ID", recs_df['user_id'].unique(), index=0, key="user_select")
 
 if st.sidebar.button("Show Recommendations", key="sidebar_show_recs"):
