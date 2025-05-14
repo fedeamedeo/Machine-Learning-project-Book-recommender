@@ -127,8 +127,26 @@ if st.session_state.favorites:
                 st.link_button("🔗 Open Link", row['link'], use_container_width=True)
 
 # ------------------ MOST POPULAR ------------------
+# ------------------ MOST POPULAR ------------------
 st.title("📚 Book Recommendation System")
 st.header("🔥 Most Popular Books")
+
+# Add custom CSS to style buttons
+st.markdown("""
+    <style>
+        .grey-button {
+            background-color: #e0e0e0 !important;
+            color: #000000 !important;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .grey-button:hover {
+            background-color: #d5d5d5 !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = items_df[items_df['i'].isin(popular_ids)]
@@ -145,21 +163,27 @@ for idx, (_, row) in enumerate(popular_books.iterrows()):
             st.markdown(f"**{row['Title']}**")
             st.caption(row['Author'])
 
-            # Optional: Show subjects as a tag if available
             if pd.notna(row.get('Subjects')) and isinstance(row['Subjects'], str):
                 main_subject = row['Subjects'].split(',')[0]
                 st.markdown(f"`{main_subject.strip()}`")
 
             st.caption(f"👥 {interactions_count} interactions")
 
+            # Buttons styled with HTML links as workaround for custom styling
             col1, col2 = st.columns([1, 1])
             with col1:
                 if row.get('link'):
-                    st.link_button("🔗", row['link'], use_container_width=True)
+                    st.markdown(f"""
+                        <a href="{row['link']}" target="_blank">
+                            <button class="grey-button" style="width: 100%">🔗</button>
+                        </a>
+                    """, unsafe_allow_html=True)
+
             with col2:
                 if st.button("❤️", key=f"pop_{row['i']}"):
                     if row['i'] not in st.session_state.favorites:
                         st.session_state.favorites.append(row['i'])
+
 # ------------------ BROWSE BY GENRE ------------------
 st.header("📚 Browse by Genre")
 
