@@ -147,8 +147,7 @@ if search_query:
                 st.image(row['cover_url'], width=120)
                 st.markdown(f"**{row['Title']}**")
                 st.caption(row['Author'])
-                if pd.notna(row.get('Subjects')):
-                    st.markdown(f"`{row['Subjects'].split(',')[0]}`")
+                
                 st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
                 col1, col2 = st.columns(2)
                 with col1:
