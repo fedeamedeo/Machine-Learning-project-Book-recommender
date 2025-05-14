@@ -118,8 +118,7 @@ if st.sidebar.button("Show Recommendations"):
                     st.image(row['cover_url'], width=120)
                     st.markdown(f"**{row['Title']}**")
                     st.caption(row['Author'])
-                    if pd.notna(row.get('Subjects')):
-                        st.markdown(f"`{row['Subjects'].split(',')[0]}`")
+                    
                     st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
                     col1, col2 = st.columns(2)
                     with col1:
@@ -173,9 +172,7 @@ if st.session_state.favorites:
                 st.markdown(f"**{row['Title']}**")
                 st.caption(row['Author'])
                 if pd.notna(row.get('Subjects')):
-                    st.markdown(f"`{row['Subjects'].split(',')[0]}`")
-                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
-                col1, col2 = st.columns(2)
+                    
                 with col1:
                     if row.get('link'):
                         st.markdown(f"""<a href="{row['link']}" target="_blank"><button class="grey-button" style="width: 100%">🔗</button></a>""", unsafe_allow_html=True)
@@ -196,9 +193,7 @@ for i, (_, row) in enumerate(popular_books.iterrows()):
             st.markdown(f"**{row['Title']}**")
             st.caption(row['Author'])
             if pd.notna(row.get('Subjects')):
-                st.markdown(f"`{row['Subjects'].split(',')[0]}`")
-            st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
-            col1, col2 = st.columns(2)
+                s
             with col1:
                 if row.get('link'):
                     st.markdown(f"""<a href="{row['link']}" target="_blank"><button class="grey-button" style="width: 100%">🔗</button></a>""", unsafe_allow_html=True)
