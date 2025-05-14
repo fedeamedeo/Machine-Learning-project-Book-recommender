@@ -25,7 +25,14 @@ def load_data():
 recs_df, items_df, interactions_df = load_data()
 
 # ---------- SIDEBAR ----------
-st.sidebar.title("🔧 Settings")
+st.sidebar.title("Recommendation")
+st.sidebar.image("https://via.placeholder.com/150", width=150)
+st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
+st.sidebar.markdown("Select a user to see their personalized book recommendations.")
+st.sidebar.markdown("You can also search for books by title, author, or subject.")
+st.sidebar.markdown("⭐ Save your favorite books to revisit later.")
+st.sidebar.markdown("📚 Browse by genre to discover new books.")
+
 st.sidebar.markdown("Chat with the system to get personalized book recommendations using precomputed TF-IDF matches.")
 st.session_state.selected_user = st.sidebar.selectbox("Select a User ID", recs_df['user_id'].unique(), index=0, key="user_select")
 
