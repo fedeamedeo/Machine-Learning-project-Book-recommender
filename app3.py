@@ -133,20 +133,33 @@ st.header("🔥 Most Popular Books")
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = items_df[items_df['i'].isin(popular_ids)]
 
-cols = st.columns(5)
-for i, (_, row) in enumerate(popular_books.iterrows()):
-    interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
-    with cols[i % 5]:
-        st.image(row['cover_url'], width=100)
-        st.markdown(f"**{row['Title']}**")
-        st.caption(row['Author'])
-        st.caption(f"👥 {interactions_count} interactions")
-        if row.get('link'):
-            st.link_button("🔗 Open Link", row['link'], use_container_width=True)
-        if st.button("❤️ Save", key=f"pop_{row['i']}"):
-            if row['i'] not in st.session_state.favorites:
-                st.session_state.favorites.append(row['i'])
+num_columns = 5
+cols = st.columns(num_columns)
 
+for idx, (_, row) in enumerate(popular_books.iterrows()):
+    interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
+
+    with cols[idx % num_columns]:
+        with st.container(border=True):
+            st.image(row['cover_url'], width=120)
+            st.markdown(f"**{row['Title']}**")
+            st.caption(row['Author'])
+
+            # Optional: Show subjects as a tag if available
+            if pd.notna(row.get('Subjects')) and isinstance(row['Subjects'], str):
+                main_subject = row['Subjects'].split(',')[0]
+                st.markdown(f"`{main_subject.strip()}`")
+
+            st.caption(f"👥 {interactions_count} interactions")
+
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                if row.get('link'):
+                    st.link_button("🔗", row['link'], use_container_width=True)
+            with col2:
+                if st.button("❤️", key=f"pop_{row['i']}"):
+                    if row['i'] not in st.session_state.favorites:
+                        st.session_state.favorites.append(row['i'])
 # ------------------ BROWSE BY GENRE ------------------
 st.header("📚 Browse by Genre")
 
