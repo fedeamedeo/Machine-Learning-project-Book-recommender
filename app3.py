@@ -50,6 +50,8 @@ if st.sidebar.button("View Book Details"):
     st.markdown(f"**{book_info['Title']}**")
     st.caption(book_info['Author'])
     st.caption(f"👥 {interactions_df[interactions_df['i'] == book_info['i']].shape[0]} interactions")
+    if book_info.get('Subjects'):
+        st.caption(book_info['Subjects'].split(',')[0])
     if book_info.get('link'):
         st.markdown(f"[🔗 Open Link]({book_info['link']})", unsafe_allow_html=True)
     if st.button("❤️ Save to Favorites"):
@@ -71,8 +73,8 @@ if st.sidebar.button("Show Recommendations"):
                     st.image(row['cover_url'], width=120)
                     st.markdown(f"**{row['Title']}**")
                     st.caption(row['Author'])
-                    if pd.notna(row.get('Subjects')):
-                        st.markdown(f"`{row['Subjects'].split(',')[0]}`")
+                    if row.get('Subjects'):
+                        st.caption(row['Subjects'].split(',')[0])
                     st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
                     col1, col2 = st.columns(2)
                     with col1:
@@ -100,8 +102,8 @@ if search_query:
                 st.image(row['cover_url'], width=120)
                 st.markdown(f"**{row['Title']}**")
                 st.caption(row['Author'])
-                if pd.notna(row.get('Subjects')):
-                    st.markdown(f"`{row['Subjects'].split(',')[0]}`")
+                if row.get('Subjects'):
+                    st.caption(row['Subjects'].split(',')[0])
                 st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
                 col1, col2 = st.columns(2)
                 with col1:
@@ -126,8 +128,8 @@ if st.session_state.favorites:
                 st.image(row['cover_url'], width=120)
                 st.markdown(f"**{row['Title']}**")
                 st.caption(row['Author'])
-                if pd.notna(row.get('Subjects')):
-                    st.markdown(f"`{row['Subjects'].split(',')[0]}`")
+                if row.get('Subjects'):
+                    st.caption(row['Subjects'].split(',')[0])
                 st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
                 col1, col2 = st.columns(2)
                 with col1:
@@ -149,8 +151,8 @@ for i, (_, row) in enumerate(popular_books.iterrows()):
             st.image(row['cover_url'], width=120)
             st.markdown(f"**{row['Title']}**")
             st.caption(row['Author'])
-            if pd.notna(row.get('Subjects')):
-                st.markdown(f"`{row['Subjects'].split(',')[0]}`")
+            if row.get('Subjects'):
+                st.caption(row['Subjects'].split(',')[0])
             st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
             col1, col2 = st.columns(2)
             with col1:
@@ -174,7 +176,7 @@ for genre in genres:
                 st.image(row['cover_url'], width=120)
                 st.markdown(f"**{row['Title']}**")
                 st.caption(row['Author'])
-                st.caption(f"`{genre}`")
+                st.caption(f"Genre: {genre}")
                 st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
                 col1, col2 = st.columns(2)
                 with col1:
