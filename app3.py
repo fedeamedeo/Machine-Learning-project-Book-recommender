@@ -28,12 +28,10 @@ recs_df, items_df, interactions_df = load_data()
 st.sidebar.title("Book Recommendations")
 st.sidebar.image("https://media.istockphoto.com/id/1210557301/photo/magic-book-open.jpg?s=612x612&w=0&k=20&c=2T9x_Z_by3QEeo2DdPOapMUi545Zi10V-eDwg6ToUoI=", width=300)
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
-st.sidebar.markdown("You can also search for books by title, author, or subject.")
-st.sidebar.markdown("⭐ Save your favorite books to revisit later.")
-st.sidebar.markdown("📚 Browse by genre to discover new books.")
+
 
 st.sidebar.markdown("Select your Personal Library User Id user to see book recommendations just for you.")
-st.session_state.selected_user = st.sidebar.selectbox("Select a User ID", recs_df['user_id'].unique(), index=0, key="user_select")
+st.session_state.selected_user = st.sidebar.selectbox("User ID", recs_df['user_id'].unique(), index=0, key="user_select")
 
 if st.sidebar.button("Show Recommendations", key="sidebar_show_recs"):
     user_row = recs_df[recs_df['user_id'] == st.session_state.selected_user]
@@ -59,6 +57,9 @@ if st.sidebar.button("Show Recommendations", key="sidebar_show_recs"):
     else:
         st.warning("No recommendations found for this user.")
 st.sidebar.markdown("---")
+st.sidebar.markdown("You can also search for books by title, author, or subject.")
+st.sidebar.markdown("⭐ Save your favorite books to revisit later.")
+st.sidebar.markdown("📚 Browse by genre to discover new books.")
 st.sidebar.subheader("📖 Pick a Book Title")
 book_titles = items_df['Title'].dropna().unique()
 selected_book = st.sidebar.selectbox("Type or select a book from the dropdown", sorted(book_titles), key="book_select")
