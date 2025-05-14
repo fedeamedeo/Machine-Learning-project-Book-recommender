@@ -25,8 +25,8 @@ def load_data():
 recs_df, items_df, interactions_df = load_data()
 
 # ---------- SIDEBAR ----------
-st.sidebar.title("Recommendation")
-st.sidebar.image("https://via.placeholder.com/150", width=150)
+st.sidebar.title("Recommendations")
+st.sidebar.image("https://media.istockphoto.com/id/495477978/photo/open-book.jpg?s=170667a&w=is&k=20&c=mZSfmMtKFGsY2J8DCrOBg6nQcvL7Dd0TBr9JG-q54n0=", width=150)
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
 st.sidebar.markdown("Select a user to see their personalized book recommendations.")
 st.sidebar.markdown("You can also search for books by title, author, or subject.")
