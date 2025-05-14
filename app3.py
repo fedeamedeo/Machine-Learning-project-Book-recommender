@@ -58,12 +58,18 @@ if st.sidebar.button("Show Recommendations", key="sidebar_show_recs"):
         st.warning("No recommendations found for this user.")
 st.sidebar.markdown("---")
 st.sidebar.markdown("You can also search for books by title, author, or subject.")
-st.sidebar.markdown("⭐ Save your favorite books to revisit later.")
 st.sidebar.markdown("📚 Browse by genre to discover new books.")
+st.sidebar.markdown("⭐ Save your favorite books to revisit later.")
+
 st.sidebar.subheader("📖 Pick a Book Title")
 book_titles = items_df['Title'].dropna().unique()
-selected_book = st.sidebar.selectbox("Type or select a book from the dropdown", sorted(book_titles), key="book_select")
-if selected_book:
+selected_book = st.sidebar.selectbox(
+    "Type or select a book from the dropdown", 
+    sorted(book_titles), 
+    key="book_select"
+)
+
+if st.sidebar.button("View Book Details", key="view_book_details"):
     book_info = items_df[items_df['Title'] == selected_book].iloc[0]
     interactions_count = interactions_df[interactions_df['i'] == book_info['i']].shape[0]
 
