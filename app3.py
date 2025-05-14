@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import os
 import webbrowser
-from sklearn import neighbors
-from sklearn.preprocessing import MinMaxScaler
 
 # ---------- CONFIG ----------
 st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_sidebar_state="expanded")
@@ -22,58 +20,18 @@ def load_data():
     recs = pd.read_csv("tf_idf.csv")
     items = pd.read_csv("items_improved_image2.csv")
     interactions = pd.read_csv("interactions_train1.csv")
-    books_df = pd.read_csv("books.csv", on_bad_lines='skip')
-    return recs, items, interactions, books_df
+    return recs, items, interactions
 
-recs_df, items_df, interactions_df, books_df = load_data()
-
-# Clean and prep books_df
-books_df.drop(['bookID', 'isbn', 'isbn13'], axis=1, inplace=True)
-language_df = pd.get_dummies(books_df['language_code'])
-features = pd.concat([language_df, books_df[['average_rating', 'ratings_count']]], axis=1)
-scaler = MinMaxScaler()
-features_scaled = scaler.fit_transform(features)
-model = neighbors.NearestNeighbors(n_neighbors=5, algorithm='ball_tree', metric='euclidean')
-model.fit(features_scaled)
-dist, idlist = model.kneighbors(features_scaled)
-
-def recommend_books_publishers(publisher_name):
-    recommended_books = books_df[books_df['publisher'] == publisher_name][['title']]
-    return recommended_books.head(10)
-
-def recommend_books_authors(authors_name):
-    recommended_books = books_df[books_df['authors'] == authors_name][['title']]
-    return recommended_books.head(10)
-
-def recommend_books_lang(language):
-    recommended_books = books_df[books_df['language_code'] == language][['title']]
-    return recommended_books.head(10)
-
-def BookRecommender(book_name):
-    book_list_name = []
-    if book_name in books_df['title'].values:
-        book_id = books_df[books_df['title'] == book_name].index[0]
-        for newid in idlist[book_id]:
-            book_list_name.append(books_df.iloc[newid].title)
-    return book_list_name
+recs_df, items_df, interactions_df = load_data()
 
 # ---------- SIDEBAR ----------
 st.sidebar.title("🔧 Settings")
 st.sidebar.markdown("Chat with the system to get personalized book recommendations using precomputed TF-IDF matches.")
 st.session_state.selected_user = st.sidebar.selectbox("Select a User ID", recs_df['user_id'].unique(), index=0, key="user_select")
 
-# Extra filters
-st.sidebar.markdown("---")
-st.sidebar.subheader("🎯 Book Filters")
-selected_publisher = st.sidebar.selectbox("Select Publisher", books_df['publisher'].dropna().unique())
-selected_author = st.sidebar.selectbox("Select Author", books_df['authors'].dropna().unique())
-selected_language = st.sidebar.selectbox("Select Language", books_df['language_code'].dropna().unique())
-
-st.sidebar.subheader("🔁 Content-Based Book Recommendation")
-book_to_recommend = st.sidebar.selectbox("Select Book", books_df['title'].dropna().unique())
-
 if st.sidebar.button("Show Recommendations", key="sidebar_show_recs"):
     user_row = recs_df[recs_df['user_id'] == st.session_state.selected_user]
+
     if not user_row.empty:
         book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
         recommended_books = items_df[items_df['i'].isin(book_ids)]
@@ -94,20 +52,135 @@ if st.sidebar.button("Show Recommendations", key="sidebar_show_recs"):
                         st.session_state.favorites.append(row['i'])
     else:
         st.warning("No recommendations found for this user.")
+st.sidebar.markdown("---")
+st.sidebar.subheader("📖 Pick a Book Title")
+book_titles = items_df['Title'].dropna().unique()
+selected_book = st.sidebar.selectbox("Type or select a book from the dropdown", sorted(book_titles), key="book_select")
+if selected_book:
+    book_info = items_df[items_df['Title'] == selected_book].iloc[0]
+    interactions_count = interactions_df[interactions_df['i'] == book_info['i']].shape[0]
 
-# ---------- Recommendation Outputs ----------
-st.header("📚 Other Recommendations")
+    st.image(book_info['cover_url'], width=150)
+    st.markdown(f"**{book_info['Title']}**")
+    st.caption(book_info['Author'])
+    st.caption(f"👥 {interactions_count} interactions")
 
-st.subheader("🔖 Recommendations by Publisher")
-st.dataframe(recommend_books_publishers(selected_publisher))
+    if book_info.get('link'):
+        st.markdown(f"[🔗 Open Link]({book_info['link']})", unsafe_allow_html=True)
 
-st.subheader("🖋️ Recommendations by Author")
-st.dataframe(recommend_books_authors(selected_author))
+    if st.button("❤️ Save to Favorites", key=f"select_{book_info['i']}"):
+        if book_info['i'] not in st.session_state.favorites:
+            st.session_state.favorites.append(book_info['i'])
+# ---------- SELECT BOOK FROM DROPDOWN ----------
+'''st.subheader("🎬 Pick a Book Title")
 
-st.subheader("🌐 Recommendations by Language")
-st.dataframe(recommend_books_lang(selected_language))
+book_titles = items_df['Title'].dropna().unique()
+selected_book = st.selectbox("Type or select a book from the dropdown", sorted(book_titles))
 
-st.subheader(f"📚 Similar Books to: '{book_to_recommend}'")
-st.write(BookRecommender(book_to_recommend))
+if selected_book:
+    book_info = items_df[items_df['Title'] == selected_book].iloc[0]
+    interactions_count = interactions_df[interactions_df['i'] == book_info['i']].shape[0]
+
+    st.image(book_info['cover_url'], width=150)
+    st.markdown(f"**{book_info['Title']}**")
+    st.caption(book_info['Author'])
+    st.caption(f"👥 {interactions_count} interactions")
+
+    if book_info.get('link'):
+        st.markdown(f"[🔗 Open Link]({book_info['link']})", unsafe_allow_html=True)
+
+    if st.button("❤️ Save to Favorites", key=f"select_{book_info['i']}"):
+        if book_info['i'] not in st.session_state.favorites:
+            st.session_state.favorites.append(book_info['i'])'''
 
 
+
+
+# ---------- SEARCH BAR ----------
+st.title("🔍 Search the Book Database")
+search_query = st.text_input("Search for a book by title, author, or subject:")
+if search_query:
+    results = items_df[
+        items_df['Title'].str.lower().str.contains(search_query.lower(), na=False) |
+        items_df['Author'].str.lower().str.contains(search_query.lower(), na=False) |
+        items_df['Subjects'].str.lower().str.contains(search_query.lower(), na=False)
+    ]
+    st.subheader(f"Found {len(results)} result(s):")
+    cols = st.columns(5)
+    for i, (_, row) in enumerate(results.head(15).iterrows()):
+        interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
+        with cols[i % 5]:
+            st.image(row.get('cover_url', "https://via.placeholder.com/128x195.png?text=No+Image"), width=100)
+            st.markdown(f"**{row['Title']}**")
+            st.caption(row['Author'])
+            st.caption(f"👥 {interactions_count} interactions")
+            if row.get('link'):
+                st.link_button("🔗 Open Link", row['link'], use_container_width=True)
+
+# ------------------ FAVORITES SECTION ------------------
+if st.session_state.favorites:
+    st.subheader("⭐ Your Favorite Books")
+    fav_books = items_df[items_df['i'].isin(st.session_state.favorites)]
+    clear = st.button("🗑️ Clear Favorites")
+    if clear:
+        st.session_state.favorites = []
+
+    cols = st.columns(5)
+    for i, (_, row) in enumerate(fav_books.iterrows()):
+        interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
+        with cols[i % 5]:
+            st.image(row['cover_url'], width=100)
+            st.markdown(f"**{row['Title']}**")
+            st.caption(row['Author'])
+            st.caption(f"👥 {interactions_count} interactions")
+            if row.get('link'):
+                st.link_button("🔗 Open Link", row['link'], use_container_width=True)
+
+# ------------------ MOST POPULAR ------------------
+st.title("📚 Book Recommendation System")
+st.header("🔥 Most Popular Books")
+
+popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
+popular_books = items_df[items_df['i'].isin(popular_ids)]
+
+cols = st.columns(5)
+for i, (_, row) in enumerate(popular_books.iterrows()):
+    interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
+    with cols[i % 5]:
+        st.image(row['cover_url'], width=100)
+        st.markdown(f"**{row['Title']}**")
+        st.caption(row['Author'])
+        st.caption(f"👥 {interactions_count} interactions")
+        if row.get('link'):
+            st.link_button("🔗 Open Link", row['link'], use_container_width=True)
+        if st.button("❤️ Save", key=f"pop_{row['i']}"):
+            if row['i'] not in st.session_state.favorites:
+                st.session_state.favorites.append(row['i'])
+
+# ------------------ BROWSE BY GENRE ------------------
+st.header("📚 Browse by Genre")
+
+top_subjects = ["Mangas", "Roman", "Sciences", "Fantasy", "Histoire"]
+
+for subject in top_subjects:
+    st.subheader(f"📖 {subject}")
+    subject_books = items_df[
+        items_df['Subjects'].str.contains(subject, case=False, na=False)
+    ].head(5)
+
+    cols = st.columns(5)
+    for i, (_, row) in enumerate(subject_books.iterrows()):
+        interactions_count = interactions_df[interactions_df['i'] == row['i']].shape[0]
+        with cols[i % 5]:
+            st.image(row['cover_url'], width=100)
+            st.markdown(f"**{row['Title']}**")
+            st.caption(row['Author'])
+            st.caption(f"👥 {interactions_count} interactions")
+            if row.get('link'):
+                st.link_button("🔗 Open Link", row['link'], use_container_width=True)
+            if st.button("❤️ Save", key=f"genre_{row['i']}"):
+                if row['i'] not in st.session_state.favorites:
+                    st.session_state.favorites.append(row['i'])
+
+
+STARTING CODE 
