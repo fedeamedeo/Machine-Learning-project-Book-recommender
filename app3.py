@@ -36,11 +36,12 @@ def load_data():
 recs_df, items_df, interactions_df = load_data()
 
 # ---------- SIDEBAR ----------
-st.sidebar.title("Book Recommendations")
+t.sidebar.title("Book Recommendations")
 st.sidebar.image("https://media.istockphoto.com/id/1210557301/photo/magic-book-open.jpg?s=612x612&w=0&k=20&c=2T9x_Z_by3QEeo2DdPOapMUi545Zi10V-eDwg6ToUoI=", width=300)
-st.sidebar.markdown("Select your User ID to see personalized book recommendations.")
-user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
+st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
 
+st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
+st.session_state.selected_user = st.sidebar.selectbox("User ID", recs_df['user_id'].unique(), index=0, key="user_select")
 # ---------- BOOK PICKER ----------
 book_titles = items_df['Title'].dropna().unique()
 selected_book = st.sidebar.selectbox("📖 Pick a Book Title", sorted(book_titles))
