@@ -1,22 +1,6 @@
 # Book Recommendation System using Machine Learning
 
-This project aims to develop a personalized book recommendation system using machine learning techniques. Leveraging collaborative filtering methods, the system analyzes user interactions and book metadata to generate accurate and tailored suggestions.
-
-
-## Libraries and Models Used:
-
-- Pandas:  Data manipulation and analysis.
-
-- NumPy:  Numerical computing.
-
-- Matplotlib and seaborn:  Data visualization.
-
-- ipywidgets:  Interactive widgets.
-
-- Scikit-learn (sklearn):  Machine learning library.
-
-- KNN (K-Nearest Neighbors):  Algorithm for generating recommendations.
-
+This project aims to develop a personalized book recommendation system using machine learning techniques. Leveraging collaborative filtering methods, the system analyzes implicit user interactions and book metadata to generate accurate and tailored suggestions.
 
 ## Project Workflow:
 
@@ -25,6 +9,12 @@ This project aims to develop a personalized book recommendation system using mac
 - Data Cleaning and Preprocessing: This stage involves handling missing values, duplicate entries, and ensuring consistency in column names and data types. Preprocessing steps include feature extraction (e.g., publication year) and dropping unnecessary columns like bookID and ISBN.
 
 - Exploratory Data Analysis (EDA): EDA techniques such as visualization and aggregation are employed to understand the distribution and relationships within the dataset. Analysis includes exploring book ratings, language distribution, top publishers, and authors based on various metrics.
+
+- Version 1: Collaborative Filtering: The baseline version of our recommender uses user-based and item-based collaborative filtering.
+
+- Version 2: Metadata Enhancement and Embeddings: To improve the recommender, data augmentation was done on the books' metadata, using 2 APIs: Google Books and Open Library. This allowed to retrieve missing metadata, such as author names, publishers, etc. Then, to represent this metadata, text embeddings were used. We opted for the HuggingFace all-MiniLM-L6-v2 Sentence Transformer model. This model maps sentences & paragraphs to a 384 dimensional dense vector space. This model actually gave us worse scores than the baseline, prompting us to look for other solutions.
+
+- Version 3: Hybrid Model with CF and Embeddings: Building on previously tried models, we computed a hybrid score !!!!!!!!HYPERPARAMETER TUNING!!!!!!!!!!!!
 
 - Interactive Recommendations: The project offers an interactive interface using Streamlit and ipywidgets, allowing users to explore recommendations based on publishers, authors, languages, and specific book titles. Recommendations are generated using the K-Nearest Neighbors algorithm, providing users with similar books based on their selections.
 
