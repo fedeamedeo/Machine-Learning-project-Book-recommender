@@ -38,8 +38,8 @@ recs_df, items_df, interactions_df = load_data()
 # ---------- SIDEBAR ----------
 st.sidebar.title("Book Recommendations")
 st.sidebar.image("https://media.istockphoto.com/id/1210557301/photo/magic-book-open.jpg?s=612x612&w=0&k=20&c=2T9x_Z_by3QEeo2DdPOapMUi545Zi10V-eDwg6ToUoI=", width=300)
-st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
+st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 
 
@@ -75,18 +75,22 @@ book_titles = items_df['Title'].dropna().unique()
 selected_book = st.sidebar.selectbox("📖 Pick a Book Title", sorted(book_titles))
 if st.sidebar.button("View Book Details"):
     book_info = items_df[items_df['Title'] == selected_book].iloc[0]
+
+    st.subheader("📘 Book Details")
     st.image(book_info['cover_url'], width=150)
     st.markdown(f"**{book_info['Title']}**")
     st.caption(book_info['Author'])
     st.caption(f"👥 {interactions_df[interactions_df['i'] == book_info['i']].shape[0]} interactions")
+
     if book_info.get('Subjects'):
         st.caption(book_info['Subjects'].split(',')[0])
+
     if book_info.get('link'):
         st.markdown(f"[🔗 Open Link]({book_info['link']})", unsafe_allow_html=True)
+
     if st.button("❤️ Save to Favorites"):
         if book_info['i'] not in st.session_state.favorites:
             st.session_state.favorites.append(book_info['i'])
-
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
