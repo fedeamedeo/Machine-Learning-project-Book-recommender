@@ -80,7 +80,7 @@ if st.sidebar.button("View Book Details"):
     book_info2 = book_image[book_image['Title'] == selected_book].iloc[0]
 
     st.subheader("📘 Book Details")
-    st.image(book_info2['cover_url'], width=150)
+    st.image(book_info2['image_original'], width=150)
     st.markdown(f"**{book_info['Title']}**")
     st.caption(book_info['Author'])
     st.caption(f"👥 {interactions_df[interactions_df['i'] == book_info['i']].shape[0]} visualizations")
@@ -94,6 +94,7 @@ if st.sidebar.button("View Book Details"):
     if st.button("❤️ Save to Favorites"):
         if book_info['i'] not in st.session_state.favorites:
             st.session_state.favorites.append(book_info['i'])
+            
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
