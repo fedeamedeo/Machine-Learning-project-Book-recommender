@@ -32,7 +32,7 @@ def load_data():
     items = pd.read_csv("items_improved_image2.csv")
     interactions = pd.read_csv("interactions_train1.csv")
     book_image = pd.read_csv("merged_with_api.csv")
-    return recs, items, interactions
+    return recs, items, interactions, book_image
 
 recs_df, items_df, interactions_df = load_data()
 
@@ -94,7 +94,7 @@ if st.sidebar.button("View Book Details"):
     if st.button("❤️ Save to Favorites"):
         if book_info['i'] not in st.session_state.favorites:
             st.session_state.favorites.append(book_info['i'])
-            
+
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
