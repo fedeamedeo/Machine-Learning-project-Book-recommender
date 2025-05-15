@@ -60,7 +60,7 @@ if st.sidebar.button("Show Recommendations"):
                     st.caption(row['Author'])
                     if row.get('Subjects'):
                         st.caption(row['Subjects'].split(',')[0])
-                    st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
+                    st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
                     col1, col2 = st.columns(2)
                     with col1:
                         if row.get('link'):
@@ -80,7 +80,7 @@ if st.sidebar.button("View Book Details"):
     st.image(book_info['cover_url'], width=150)
     st.markdown(f"**{book_info['Title']}**")
     st.caption(book_info['Author'])
-    st.caption(f"👥 {interactions_df[interactions_df['i'] == book_info['i']].shape[0]} interactions")
+    st.caption(f"👥 {interactions_df[interactions_df['i'] == book_info['i']].shape[0]} visualizations")
 
     if book_info.get('Subjects'):
         st.caption(book_info['Subjects'].split(',')[0])
@@ -111,7 +111,7 @@ if search_query:
                 st.caption(row['Author'])
                 if row.get('Subjects'):
                     st.caption(row['Subjects'].split(',')[0])
-                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
+                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
                 col1, col2 = st.columns(2)
                 with col1:
                     if row.get('link'):
@@ -137,7 +137,7 @@ if st.session_state.favorites:
                 st.caption(row['Author'])
                 if row.get('Subjects'):
                     st.caption(row['Subjects'].split(',')[0])
-                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
+                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
                 col1, col2 = st.columns(2)
                 with col1:
                     if row.get('link'):
@@ -160,7 +160,7 @@ for i, (_, row) in enumerate(popular_books.iterrows()):
             st.caption(row['Author'])
             if row.get('Subjects'):
                 st.caption(row['Subjects'].split(',')[0])
-            st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
+            st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
             col1, col2 = st.columns(2)
             with col1:
                 if row.get('link'):
@@ -184,7 +184,7 @@ for genre in genres:
                 st.markdown(f"**{row['Title']}**")
                 st.caption(row['Author'])
                 st.caption(f"Genre: {genre}")
-                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} interactions")
+                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
                 col1, col2 = st.columns(2)
                 with col1:
                     if row.get('link'):
