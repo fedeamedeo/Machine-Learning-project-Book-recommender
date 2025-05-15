@@ -29,13 +29,11 @@ if "favorites" not in st.session_state:
 @st.cache_data
 def load_data():
     recs = pd.read_csv("tf_idf.csv")
-    items = pd.read_csv("items_improved_image2.csv")
+    items = pd.read_csv("merged_with_api.csv")
     interactions = pd.read_csv("interactions_train1.csv")
-    book_image = pd.read_csv("merged_with_api.csv")
-    return recs, items, interactions, book_image
+    return recs, items, interactions
 
 recs_df, items_df, interactions_df = load_data()
-
 
 # ---------- SIDEBAR ----------
 st.sidebar.title("Book Recommendations")
@@ -43,7 +41,6 @@ st.sidebar.image("https://media.istockphoto.com/id/1210557301/photo/magic-book-o
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
 st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
-
 
 # ---------- USER RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations"):
@@ -57,7 +54,7 @@ if st.sidebar.button("Show Recommendations"):
         for i, (_, row) in enumerate(recommended_books.iterrows()):
             with cols[i % 5]:
                 with st.container(border=True):
-                    st.image(row['cover_url'], width=120)
+                    st.image(row['image'], width=120)
                     st.markdown(f"**{row['Title']}**")
                     st.caption(row['Author'])
                     if row.get('Subjects'):
@@ -66,11 +63,12 @@ if st.sidebar.button("Show Recommendations"):
                     col1, col2 = st.columns(2)
                     with col1:
                         if row.get('link'):
-                            st.markdown(f"""<a href="{row['link']}" target="_blank"><button class="grey-button" style="width: 100%">🔗</button></a>""", unsafe_allow_html=True)
+                            st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\" style=\"width: 100%\">🔗</button></a>""", unsafe_allow_html=True)
                     with col2:
                         if st.button("❤️", key=f"rec_{row['i']}"):
                             if row['i'] not in st.session_state.favorites:
                                 st.session_state.favorites.append(row['i'])
+
 
 # ---------- BOOK PICKER ----------
 book_titles = items_df['Title'].dropna().unique()
