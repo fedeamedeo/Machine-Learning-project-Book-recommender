@@ -75,10 +75,10 @@ book_titles = items_df['Title'].dropna().unique()
 selected_book = st.sidebar.selectbox("📖 Pick a Book Title", sorted(book_titles))
 if st.sidebar.button("View Book Details"):
     book_info = items_df[items_df['Title'] == selected_book].iloc[0]
-    book_info2 = book_image[book_image['Title'] == selected_book].iloc[0]
+    
 
     st.subheader("📘 Book Details")
-    st.image(book_info2['image_original'], width=150)
+    st.image(book_info['image_original'], width=150)
     st.markdown(f"**{book_info['Title']}**")
     st.caption(book_info['Author'])
     st.caption(f"👥 {interactions_df[interactions_df['i'] == book_info['i']].shape[0]} visualizations")
