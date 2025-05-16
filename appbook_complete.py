@@ -47,7 +47,7 @@ if st.sidebar.button("Show Recommendations"):
     user_row = recs_df[recs_df['user_id'] == user_id]
     if not user_row.empty:
         book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
-        recommended_books = items_df[items_df['i'].isin(book_ids)]
+        recommended_books = merged_df[merged_df['i'].isin(book_ids)]
 
         st.subheader("📖 Top Book Picks for You")
         cols = st.columns(5)
