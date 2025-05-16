@@ -29,10 +29,10 @@ if "favorites" not in st.session_state:
 @st.cache_data
 def load_data():
     recs = pd.read_csv("tf_idf.csv")
-    merged = pd.read_csv("book_complete.csv")
+    merged = pd.read_csv("books_complete.csv")
     return recs, merged
 
-recs_df, items_df, interactions_df, merged_df = load_data()
+recs_df, merged_df = load_data()
 
 # ---------- SIDEBAR ----------
 st.sidebar.title("Book Recommendations")
