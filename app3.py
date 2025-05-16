@@ -72,22 +72,22 @@ if st.sidebar.button("Show Recommendations"):
                                 st.session_state.favorites.append(row['i'])
 
 # ---------- BOOK PICKER ----------
-book_titles = items_df['Title'].dropna().unique()
+book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📖 Pick a Book Title", sorted(book_titles))
 if st.sidebar.button("View Book Details"):
-    book_info = items_df[items_df['Title'] == selected_book].iloc[0]
+    book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
 
     st.subheader("📘 Book Details")
-    st.image(book_info['cover_url'], width=150)
-    st.markdown(f"**{book_info['Title']}**")
+    st.image(book_info['image'], width=150)
+    st.markdown(f"**{book_info['title_long']}**")
     st.caption(book_info['Author'])
     st.caption(f"👥 {interactions_df[interactions_df['i'] == book_info['i']].shape[0]} visualizations")
 
     if book_info.get('Subjects'):
         st.caption(book_info['Subjects'].split(',')[0])
 
-    if book_info.get('link'):
-        st.markdown(f"[🔗 Open Link]({book_info['link']})", unsafe_allow_html=True)
+    #if book_info.get('link'):
+        #st.markdown(f"[🔗 Open Link]({book_info['link']})", unsafe_allow_html=True)
 
     if st.button("❤️ Save to Favorites"):
         if book_info['i'] not in st.session_state.favorites:
