@@ -31,10 +31,10 @@ def load_data():
     recs = pd.read_csv("tf_idf.csv")
     items = pd.read_csv("items_improved_image2.csv")
     interactions = pd.read_csv("interactions_train1.csv")
-    return recs, items, interactions
+    merged = pd.read_csv("merged_with_api.csv")
+    return recs, items, interactions, merged
 
-recs_df, items_df, interactions_df = load_data()
-
+recs_df, items_df, interactions_df, merged_df = load_data()
 
 # ---------- SIDEBAR ----------
 st.sidebar.title("Book Recommendations")
