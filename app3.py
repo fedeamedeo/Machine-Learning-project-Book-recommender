@@ -92,6 +92,7 @@ if st.sidebar.button("View Book Details"):
     if st.button("❤️ Save to Favorites"):
         if book_info['i'] not in st.session_state.favorites:
             st.session_state.favorites.append(book_info['i'])
+            
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
