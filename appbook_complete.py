@@ -38,33 +38,62 @@ recs_df, items_df, interactions_df, merged_df = load_data()
 
 # ---------- SIDEBAR ----------
 st.sidebar.title("Book Recommendations")
-st.sidebar.image("https://media.istockphoto.com/id/1210557301/photo/magic-book-open.jpg?s=612x612&w=0&k=20&c=2T9x_Z_by3QEeo2DdPOapMUi545Zi10V-eDwg6ToUoI=", width=300)
+st.sidebar.image(
+    "https://media.istockphoto.com/id/1210557301/photo/magic-book-open.jpg?s=612x612&w=0&k=20&c=2T9x_Z_by3QEeo2DdPOapMUi545Zi10V-eDwg6ToUoI=",
+    width=300
+)
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
 st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
+
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
+
 # ---------- USER RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations"):
     user_row = recs_df[recs_df['user_id'] == user_id]
+    
     if not user_row.empty:
         book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
         recommended_books = merged_df[merged_df['i'].isin(book_ids)]
 
         st.subheader("📖 Top Book Picks for You")
         cols = st.columns(5)
+        
         for i, (_, row) in enumerate(recommended_books.iterrows()):
             with cols[i % 5]:
                 with st.container(border=True):
                     st.image(row['image'], width=120)
                     st.markdown(f"**{row['Title']}**")
                     st.caption(row['Author'])
+                    
                     if row.get('Subjects'):
                         st.caption(row['Subjects'].split(',')[0])
+
                     st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
+
                     col1, col2 = st.columns(2)
                     with col1:
-                        if row.get('link'):
-                            st.markdown(f"""<a href="{row['link']}" target="_blank"><button class="grey-button" style="width: 100%">🔗</button></a>""", unsafe_allow_html=True)
+                        if st.button("📘 More Info", key=f"info_{row['i']}"):
+                            st.session_state[f"show_modal_{row['i']}"] = True
+
                     with col2:
                         if st.button("❤️", key=f"rec_{row['i']}"):
                             if row['i'] not in st.session_state.favorites:
                                 st.session_state.favorites.append(row['i'])
+
+                    # Show Modal with detailed book info
+                    if st.session_state.get(f"show_modal_{row['i']}", False):
+                        with st.modal(f"📖 {row['Title']}"):
+                            st.image(row['image'], width=160)
+
+                            st.markdown("**Synopsis**")
+                            st.write(row.get("Description", "No description available."))
+
+                            st.markdown(f"**Authors:** {row.get('Author', 'N/A')}")
+                            st.markdown(f"**Pages:** {row.get('Pages', 'N/A')}")
+                            st.markdown(f"**Published:** {row.get('Year', 'N/A')}")
+                            st.markdown(f"**Language:** {row.get('Language', 'N/A')}")
+                            st.markdown(f"**Publisher:** {row.get('Publisher', 'N/A')}")
+                            st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
+
+                            if row.get('link'):
+                                st.markdown(f"""<a href="{row['link']}" target="_blank"><button class="grey-button">🔗 Open Link</button></a>""", unsafe_allow_html=True)
