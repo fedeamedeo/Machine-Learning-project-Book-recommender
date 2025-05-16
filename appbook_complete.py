@@ -31,7 +31,7 @@ def load_data():
     recs = pd.read_csv("tf_idf.csv")
     items = pd.read_csv("items_improved_image2.csv")
     interactions = pd.read_csv("interactions_train1.csv")
-    merged = pd.read_csv("book_complete.csv")
+    merged = pd.read_csv("books_complete.csv")
     return recs, items, interactions, merged
 
 recs_df, items_df, interactions_df, merged_df = load_data()
