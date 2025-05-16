@@ -65,4 +65,29 @@ if st.sidebar.button("Show Recommendations"):
                     st.image(row['image'], width=120)
                     
                     # Book title as button
-                    if st.button(row['Title'], key=f"btn_{row['i']}", help="Click to see more", use_container_width_
+                    if st.button(row['Title'], key=f"btn_{row['i']}", help="Click to see more", use_container_width=True):
+                        st.session_state.open_modal = row['i']
+
+# ---------- MODAL DISPLAY ----------
+if st.session_state.open_modal is not None:
+    book_row = merged_df[merged_df['i'] == st.session_state.open_modal].iloc[0]
+
+    with st.modal(f"📖 {book_row['Title']}"):
+        st.image(book_row['image'], width=160)
+        
+        st.markdown("### Synopsis")
+        st.write(book_row.get("Description", "No description available."))
+
+        st.markdown(f"**Authors:** {book_row.get('Author', 'N/A')}")
+        st.markdown(f"**Pages:** {book_row.get('Pages', 'N/A')}")
+        st.markdown(f"**Published:** {book_row.get('Year', book_row.get('Published', 'N/A'))}")
+        st.markdown(f"**Language:** {book_row.get('Language', 'N/A')}")
+        st.markdown(f"**Publisher:** {book_row.get('Publisher', 'N/A')}")
+        st.markdown(f"**Subjects:** {book_row.get('Subjects', 'N/A')}")
+
+        if book_row.get('link'):
+            st.markdown(f"""<a href="{book_row['link']}" target="_blank"><button class="book-button">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
+
+        if st.button("❤️ Add to Favorites"):
+            if book_row['i'] not in st.session_state.favorites:
+                st.session_state.favorites.append(book_row['i'])
