@@ -54,7 +54,7 @@ if st.sidebar.button("Show Recommendations"):
         for i, (_, row) in enumerate(recommended_books.iterrows()):
             with cols[i % 5]:
                 with st.container(border=True):
-                    st.image(row['cover_url'], width=120)
+                    st.image(row['image'], width=120)
                     st.markdown(f"**{row['Title']}**")
                     st.caption(row['Author'])
                     if row.get('Subjects'):
