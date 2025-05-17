@@ -83,3 +83,32 @@ if st.sidebar.button("View Book Details"):
     if st.button("❤️ Save to Favorites"):
         if book_info['i'] not in st.session_state.favorites:
             st.session_state.favorites.append(book_info['i'])
+
+# ---------- SEARCH ----------
+st.title("🔍 Search the Book Database")
+search_query = st.text_input("Search for a book by title, author, or subject:")
+if search_query:
+    results = merged_df[
+        merged_df['Title'].str.contains(search_query, case=False, na=False) |
+        merged_df['Author'].str.contains(search_query, case=False, na=False) |
+        merged_df['Subjects'].str.contains(search_query, case=False, na=False)
+    ]
+    st.subheader(f"Found {len(results)} result(s):")
+    cols = st.columns(5)
+    for i, (_, row) in enumerate(results.head(15).iterrows()):
+        with cols[i % 5]:
+            with st.container(border=True):
+                st.image(row['image'], width=120)
+                st.markdown(f"**{row['Title']}**")
+                st.caption(row['Author'])
+                if row.get('Subjects'):
+                    st.caption(row['Subjects'].split(',')[0])
+                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
+                col1, col2 = st.columns(2)
+                #with col1:
+                    #if row.get('link'):
+                        #st.markdown(f"""<a href="{row['link']}" target="_blank"><button class="grey-button" style="width: 100%">🔗</button></a>""", unsafe_allow_html=True)
+                with col2:
+                    if st.button("❤️", key=f"search_{row['i']}"):
+                        if row['i'] not in st.session_state.favorites:
+                            st.session_state.favorites.append(row['i'])
