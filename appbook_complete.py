@@ -184,7 +184,7 @@ for i, (_, row) in enumerate(popular_books.iterrows()):
     with cols[i % 5]:
         with st.container(border=True):
             st.image(row['image'], width=120)
-            st.markdown(f"**{row['Title']}**")
+            st.markdown(f"**{row['title']}**")
             st.caption(row['Author'])
             if row.get('Subjects'):
                 st.caption(row['Subjects'].split(',')[0])
