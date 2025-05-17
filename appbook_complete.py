@@ -118,12 +118,6 @@ def render_books_vertical(df, prefix):
             count = interactions_df[interactions_df['i'] == row['i']].shape[0]
             st.caption(f"👥 {count} visualizations")
 
-            description = row.get("Description") or row.get("synopsis", "No description available.")
-            if isinstance(description, str) and len(description) > 120:
-                st.caption(description[:120] + "...")
-            else:
-                st.caption(description)
-
             st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
             col1, col2 = st.columns(2)
             with col1:
@@ -141,6 +135,7 @@ def render_books_vertical(df, prefix):
                 st.markdown('<div class="modal-box">', unsafe_allow_html=True)
                 st.image(row['image'], width=160)
                 st.markdown("### Details")
+                description = row.get("Description") or row.get("synopsis", "No description available.")
                 st.write(description)
                 st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
                 st.markdown(f"**Pages:** {row.get('Pages', row.get('pages', 'N/A'))}")
@@ -186,7 +181,6 @@ if search_query:
     ]
     st.subheader(f"Found {len(results)} result(s):")
     render_books_vertical(results.head(15), "search")
-    
 
 # ---------- FAVORITES ----------
 if st.session_state.favorites:
