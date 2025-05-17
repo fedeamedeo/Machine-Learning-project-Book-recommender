@@ -92,6 +92,34 @@ user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 # ---------- BOOK PICKER ----------
 book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_titles))
+# ---------- RENDER BOOKS VERTICALLY ----------
+def render_books_vertical(df, prefix, allow_expansion=True):
+    rows = [df.iloc[i:i+3] for i in range(0, len(df), 3)]
+    for row_group in rows:
+        cols = st.columns(len(row_group))
+        for col, (_, row) in zip(cols, row_group.iterrows()):
+            with col:
+                st.markdown('<div class="book-card">', unsafe_allow_html=True)
+                st.markdown('<div class="book-content">', unsafe_allow_html=True)
+                image_url = row.get('image')
+                st.image(image_url if isinstance(image_url, str) and image_url.startswith("http")
+                         else "https://via.placeholder.com/140x210?text=No+Cover", width=140)
+                st.markdown('<div class="book-info">', unsafe_allow_html=True)
+                st.markdown(f"**{row['title']}**")
+                description = row.get("Description") or row.get("synopsis", "No description available.")
+                st.caption(description[:120] + "..." if isinstance(description, str) and len(description) > 120 else description)
+                if allow_expansion:
+                    st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
+                            if row['i'] not in st.session_state.favorites:
+                                st.session_state.favorites.append(row['i'])
+                    with col2:
+                        if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
+                            st.session_state.expanded_book_id = None if st.session_state.expanded_book_id == row['i'] else row['i']
+                            st.experimental_rerun()
+
 
 # ---------- RENDER BOOKS VERTICALLY ----------
 def render_books_vertical(df, prefix, allow_expansion=True):
