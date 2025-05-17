@@ -155,16 +155,12 @@ if st.sidebar.button("Show Recommendations", key="show_recs_button"):
 
 if st.session_state.recommended_book_ids:
     recommended_books = merged_df[merged_df['i'].isin(st.session_state.recommended_book_ids)]
+    chosen_titles = recommended_books['title'].tolist()
+    st.markdown(f"### 📌 These are the books you were recommended:")
+    for title in chosen_titles:
+        st.markdown(f"- {title}")
     st.subheader("📖 Top Book Picks for You")
     render_books_vertical(recommended_books, "rec", allow_expansion=True)
-
-# ---------- VIEW SELECTED BOOK ----------
-if st.sidebar.button("View Book Details", key="view_details_button"):
-    st.session_state.selected_book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
-
-if st.session_state.selected_book_info is not None:
-    render_books_vertical(pd.DataFrame([st.session_state.selected_book_info]), "picker", allow_expansion=True)
-
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
 search_query = st.text_input("Search for a book by title, author, or subject:")
