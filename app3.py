@@ -91,18 +91,6 @@ def load_data():
 recs_df, interactions_df, merged_df = load_data()
 
 # ---------- SIDEBAR ----------
-# ---------- SIDEBAR ----------
-st.sidebar.title("Book Recommendations")
-show_recs = st.sidebar.checkbox("📚 Show Recommendations", value=True)
-show_selected = st.sidebar.checkbox("📖 Show Selected Book", value=True)
-st.sidebar.title("Book Recommendations")
-st.sidebar.image("https://media.istockphoto.com/id/944631208/photo/education-concept-with-book-in-library.jpg?s=612x612&w=0&k=20&c=uJF-uOU5MRR-iwXqJEPAdXeaH-VJ-nqt6TdKUpEdEkk=", width=300)
-st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
-st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
-genres_available = sorted(merged_df['Subjects'].dropna().unique())
-st.sidebar.markdown("Select a genre to explore books by category.")
-selected_genre = st.sidebar.selectbox("🎨 Choose Genre", ["All"] + genres_available)
-
 st.sidebar.title("Book Recommendations")
 show_recs = st.sidebar.checkbox("📚 Show Recommendations", value=True)
 show_selected = st.sidebar.checkbox("📖 Show Selected Book", value=True)
@@ -111,6 +99,10 @@ st.sidebar.image("https://media.istockphoto.com/id/944631208/photo/education-con
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
 st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
+genres_available = sorted(merged_df['Subjects'].dropna().unique())
+st.sidebar.markdown("Select a genre to explore books by category.")
+selected_genre = st.sidebar.selectbox("🎨 Choose Genre", ["All"] + genres_available)
+
 
 # ---------- BOOK PICKER ----------
 book_titles = merged_df['title_long'].dropna().unique()
