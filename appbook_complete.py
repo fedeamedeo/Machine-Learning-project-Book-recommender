@@ -20,22 +20,22 @@ st.markdown("""
         }
         .book-card {
             display: flex;
-            gap: 1.5rem;
-            padding: 1.2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            gap: 2rem;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
             transition: box-shadow 0.3s ease-in-out;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
             align-items: flex-start;
             background-color: #ffffff;
             flex-direction: column;
         }
         .book-card:hover {
-            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
         .book-content {
             display: flex;
-            gap: 1.5rem;
+            gap: 2rem;
             width: 100%;
             align-items: flex-start;
         }
@@ -44,8 +44,8 @@ st.markdown("""
         }
         .book-buttons {
             display: flex;
-            gap: 1rem;
-            margin-top: 0.5rem;
+            gap: 1.2rem;
+            margin-top: 0.75rem;
         }
         .block-container > div:has(.element-container:empty) {
             display: none;
@@ -88,9 +88,9 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                 st.markdown('<div class="book-content">', unsafe_allow_html=True)
                 image_url = row.get('image')
                 if isinstance(image_url, str) and image_url.startswith("http"):
-                    st.image(image_url, width=110)
+                    st.image(image_url, width=140)
                 else:
-                    st.image("https://via.placeholder.com/110x160?text=No+Cover", width=110)
+                    st.image("https://via.placeholder.com/140x210?text=No+Cover", width=140)
 
                 st.markdown('<div class="book-info">', unsafe_allow_html=True)
                 st.markdown(f"**{row['title']}**")
@@ -119,11 +119,10 @@ def render_books_vertical(df, prefix, allow_expansion=True):
 
                 if allow_expansion and st.session_state.expanded_book_id == row['i']:
                     with st.expander("📓 Book Details", expanded=True):
-                        image_url = row.get('image')
                         if isinstance(image_url, str) and image_url.startswith("http"):
-                            st.image(image_url, width=160)
+                            st.image(image_url, width=180)
                         else:
-                            st.image("https://via.placeholder.com/160x240?text=No+Cover", width=160)
+                            st.image("https://via.placeholder.com/180x270?text=No+Cover", width=180)
 
                         st.markdown("### Details")
                         st.write(description)
