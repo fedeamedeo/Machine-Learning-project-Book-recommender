@@ -1,12 +1,12 @@
-# Book Recommendation System using Machine Learning
+# Book Recommender System using Machine Learning
 
-This project aims to develop a personalized book recommendation system using machine learning techniques. Leveraging collaborative filtering methods, the system analyzes implicit user interactions and book metadata to generate accurate and tailored suggestions.
+This project aims to develop a personalized book recommender system. Using five different recommender models, the system analyzes implicit user interactions and book metadata to generate accurate and tailored suggestions.
 
 ## Project Workflow:
 
-- Data Exploration: The project begins with loading the dataset containing book information using Pandas. Various attributes such as book title, authors, average rating, language, and publication date are examined to gain insights into the data structure and distribution.
+- Data Exploration: The project begins with loading the user-book interactions dataset and the book metadata. Various attributes such as book title, authors, average rating, language, and publication date are examined to gain insights into the data structure and distribution.
 
-- Data Cleaning and Preprocessing: This stage involves handling missing values, duplicate entries, and ensuring consistency in column names and data types. Preprocessing steps include feature extraction (e.g., publication year) and dropping unnecessary columns like bookID and ISBN.
+- Data Cleaning: This stage mainly involves handling duplicate entries, and ensuring consistency in column names and data types.
 
 - Exploratory Data Analysis (EDA): EDA techniques such as visualization and aggregation are employed to understand the distribution and relationships within the dataset. Analysis includes exploring book ratings, language distribution, top publishers, and authors based on various metrics.
 
