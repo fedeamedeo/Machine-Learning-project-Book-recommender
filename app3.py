@@ -99,9 +99,8 @@ st.sidebar.image("https://media.istockphoto.com/id/944631208/photo/education-con
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
 st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
-genres_available = sorted(merged_df['Subjects'].dropna().unique())
-st.sidebar.markdown("Select a genre to explore books by category.")
-selected_genre = st.sidebar.selectbox("🎨 Choose Genre", ["All"] + genres_available)
+
+
 
 
 # ---------- BOOK PICKER ----------
