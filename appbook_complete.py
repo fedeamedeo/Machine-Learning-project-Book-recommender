@@ -172,7 +172,6 @@ if st.session_state.favorites:
     if st.button("🗑️ Clear Favorites"):
         st.session_state.favorites = []
     render_books_vertical(fav_books, "fav")
-    
 
 # ---------- MOST POPULAR ----------
 st.header("🔥 Most Popular Books")
