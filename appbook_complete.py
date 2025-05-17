@@ -29,6 +29,7 @@ st.markdown("""
             align-items: flex-start;
             background-color: #ffffff;
             flex-direction: column;
+            position: relative;
         }
         .book-card:hover {
             box-shadow: 0 6px 16px rgba(0,0,0,0.15);
@@ -46,6 +47,29 @@ st.markdown("""
             display: flex;
             gap: 1rem;
             margin-top: 0.5rem;
+        }
+        .modal-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            width: 80%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
         }
         .block-container > div:has(.element-container:empty) {
             display: none;
@@ -95,7 +119,7 @@ def render_books_vertical(df, prefix):
             st.caption(f"👥 {count} visualizations")
 
             description = row.get("Description") or row.get("synopsis", "No description available.")
-            if len(description) > 120:
+            if isinstance(description, str) and len(description) > 120:
                 st.caption(description[:120] + "...")
             else:
                 st.caption(description)
@@ -108,29 +132,27 @@ def render_books_vertical(df, prefix):
                         st.session_state.favorites.append(row['i'])
             with col2:
                 if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
-                    if st.session_state.expanded_book_id == row['i']:
-                        st.session_state.expanded_book_id = None
-                    else:
-                        st.session_state.expanded_book_id = row['i']
+                    st.session_state.expanded_book_id = row['i']
             st.markdown('</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
 
             if st.session_state.expanded_book_id == row['i']:
-                with st.expander("📖 Book Details", expanded=True):
-                    st.image(row['image'], width=160)
-                    st.markdown("### Details")
-                    st.write(description)
-                    st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
-                    st.markdown(f"**Pages:** {row.get('Pages', row.get('pages', 'N/A'))}")
-                    st.markdown(f"**Published:** {row.get('Year', row.get('date_published', 'N/A'))}")
-                    st.markdown(f"**Language:** {row.get('language', row.get('language', 'N/A'))}")
-                    st.markdown(f"**Publisher:** {row.get('publisher', row.get('Publisher', 'N/A'))}")
-                    st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
-                    if row.get('link'):
-                        st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
-                    if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
-                        if row['i'] not in st.session_state.favorites:
-                            st.session_state.favorites.append(row['i'])
+                st.markdown('<div class="overlay"></div>', unsafe_allow_html=True)
+                st.markdown('<div class="modal-box">', unsafe_allow_html=True)
+                st.image(row['image'], width=160)
+                st.markdown("### Details")
+                st.write(description)
+                st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
+                st.markdown(f"**Pages:** {row.get('Pages', row.get('pages', 'N/A'))}")
+                st.markdown(f"**Published:** {row.get('Year', row.get('date_published', 'N/A'))}")
+                st.markdown(f"**Language:** {row.get('language', row.get('Language', 'N/A'))}")
+                st.markdown(f"**Publisher:** {row.get('publisher', row.get('Publisher', 'N/A'))}")
+                st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
+                if row.get('link'):
+                    st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
+                if st.button("❌ Close", key=f"{prefix}_close_{row['i']}"):
+                    st.session_state.expanded_book_id = None
+                st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations"):
