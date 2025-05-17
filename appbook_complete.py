@@ -80,7 +80,7 @@ if "expanded_book_id" not in st.session_state:
 @st.cache_data
 def load_data():
     recs = pd.read_csv("tf_idf.csv")
-    items = pd.read_csv("items_improved_image2.csv")
+    #items = pd.read_csv("items_improved_image2.csv")
     interactions = pd.read_csv("interactions_train1.csv")
     merged = pd.read_csv("books_complete.csv")
     return recs, items, interactions, merged
