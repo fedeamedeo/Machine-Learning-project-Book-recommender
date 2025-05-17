@@ -119,7 +119,7 @@ def render_books_vertical(df, prefix):
                     st.markdown("### Details")
                     st.write(description)
                     st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
-                    st.markdown(f"**Pages:** {row.get('Pages', row.get('dimensions', 'N/A'))}")
+                    st.markdown(f"**Pages:** {row.get('Pages', row.get('pages', 'N/A'))}")
                     st.markdown(f"**Published:** {row.get('Year', row.get('Published', 'N/A'))}")
                     st.markdown(f"**Language:** {row.get('language', row.get('Language', 'N/A'))}")
                     st.markdown(f"**Publisher:** {row.get('publisher', row.get('Publisher', 'N/A'))}")
@@ -174,7 +174,7 @@ if st.session_state.favorites:
     if st.button("🗑️ Clear Favorites"):
         st.session_state.favorites = []
     render_books_vertical(fav_books, "fav")
-    
+
 
 # ---------- MOST POPULAR ----------
 st.header("🔥 Most Popular Books")
