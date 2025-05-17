@@ -153,7 +153,8 @@ book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_titles))
 if st.sidebar.button("View Book Details"):
     book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
-    render_books_vertical(pd.DataFrame([book_info]), "picker", allow_expansion=True)
+    st.session_state.expanded_book_id = book_info["i"]  # <-- force open details
+    render_books_scrollable(pd.DataFrame([book_info]), "picker")
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
