@@ -27,7 +27,7 @@ st.st.markdown("""
             box-shadow: 0 4px 18px rgba(0,0,0,0.08);
             transition: box-shadow 0.3s ease-in-out;
             margin-bottom: 1rem;
-            align-items: flex-start;
+            align-merged: flex-start;
             background-color: #ffffff;
             flex-direction: column;
         }
@@ -39,7 +39,7 @@ st.st.markdown("""
             display: flex;
             gap: 2rem;
             width: 100%;
-            align-items: flex-start;
+            align-merged: flex-start;
         }
 
         .book-info {
