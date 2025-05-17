@@ -15,6 +15,7 @@ This stage mainly involves handling duplicate entries, and ensuring consistency 
 **Exploratory Data Analysis (EDA)**
 
 EDA techniques such as visualization and aggregation are employed to understand the distribution and relationships within the dataset. Analysis includes exploring book ratings, language distribution, top publishers, and authors based on various metrics.
+There is a diverse set of users, with the number of interactions per user following a long-tail distribution: most users interact with only a few items, while a few are highly active. Similarly, a small number of books receive a large number of interactions, while most receive few. The most active users and most popular books are visualized, highlighting the top 10 in each category. The top publishers are identified, with a bar plot showing the 15 publishers with the most books in the dataset. The top 10 authors by number of items are also visualized.
 
 **Recommender Models**
 
