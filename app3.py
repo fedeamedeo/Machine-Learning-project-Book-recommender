@@ -123,11 +123,14 @@ def render_books_vertical(df, prefix, allow_expansion=True):
         for col, (_, row) in zip(cols, row_group.iterrows()):
             with col:
                 st.markdown('<div class="book-card">', unsafe_allow_html=True)
+                author = row.get('Author', 'Unknown')
+                genre = row.get('Subjects', '').split(',')[0] if row.get('Subjects') else 'N/A'
+                st.caption(f"{author} — {genre}")
                 st.markdown('<div class="book-content">', unsafe_allow_html=True)
                 image_url = row.get('image')
                 st.image(image_url if isinstance(image_url, str) and image_url.startswith("http")
                          else "https://via.placeholder.com/140x210?text=No+Cover", width=140)
-                
+                # Removed unused book-info block
                 
                 description = row.get("Description") or row.get("synopsis", "No description available.")
 
@@ -212,5 +215,8 @@ genres = ["Mangas", "Roman", "Bande dessinées", "Science-fiction", "Thriller", 
 for genre in genres:
     genre_books = merged_df[merged_df['Subjects'].fillna("").str.contains(genre, case=False, na=False)]
     if not genre_books.empty:
-        st.subheader(f"📚 {genre.title()}")
-        render_books_vertical(genre_books.head(6), prefix=genre.lower().replace(" ", "_"))
+        with st.container():
+            st.markdown(f"<div style='background-color:#f8f8f8; padding:1rem 1.5rem; border-radius:10px;'>", unsafe_allow_html=True)
+            st.subheader(f"📚 {genre.title()}")
+            render_books_vertical(genre_books.head(6), prefix=genre.lower().replace(" ", "_"))
+            st.markdown("</div>", unsafe_allow_html=True)
