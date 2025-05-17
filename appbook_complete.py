@@ -7,6 +7,8 @@ st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_si
 # ---------- SESSION STATE ----------
 if "favorites" not in st.session_state:
     st.session_state.favorites = []
+if "expanded_book_id" not in st.session_state:
+    st.session_state.expanded_book_id = None
 
 # ---------- DATA LOADING ----------
 @st.cache_data
@@ -18,28 +20,6 @@ def load_data():
     return recs, items, interactions, merged
 
 recs_df, items_df, interactions_df, merged_df = load_data()
-
-# ---------- FUNCTION TO SHOW MODAL ----------
-def show_book_details_dialog(row):
-    with st.experimental_dialog(f"📘 {row['Title']}"):
-        st.image(row['image'], width=160)
-        st.markdown("### Details")
-        st.write(row.get("Description", "No description available."))
-
-        st.markdown(f"**Author:** {row.get('Author', 'N/A')}")
-        st.markdown(f"**Pages:** {row.get('Pages', 'N/A')}")
-        st.markdown(f"**Published:** {row.get('Year', row.get('Published', 'N/A'))}")
-        st.markdown(f"**Language:** {row.get('Language', 'N/A')}")
-        st.markdown(f"**Publisher:** {row.get('Publisher', 'N/A')}")
-        st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
-
-        if row.get('link'):
-            st.markdown(f"""<a href="{row['link']}" target="_blank">
-                            <button class="grey-button">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
-
-        if st.button("❤️ Add to Favorites", key=f"fav_detail_{row['i']}"):
-            if row['i'] not in st.session_state.favorites:
-                st.session_state.favorites.append(row['i'])
 
 # ---------- SIDEBAR ----------
 st.sidebar.title("Book Recommendations")
@@ -80,5 +60,29 @@ if st.sidebar.button("Show Recommendations"):
                                 st.session_state.favorites.append(row['i'])
                     with col2:
                         if st.button("More Info", key=f"info_{row['i']}"):
-                            show_book_details_dialog(row)
+                            st.session_state.expanded_book_id = row['i']
 
+                # ---------- Expandable Book Details (simulated modal) ----------
+                if st.session_state.expanded_book_id == row['i']:
+                    with st.expander("📖 Book Details", expanded=True):
+                        st.image(row['image'], width=160)
+                        st.markdown("### Details")
+                        st.write(row.get("Description", "No description available."))
+                        st.markdown(f"**Author:** {row.get('Author', 'N/A')}")
+                        st.markdown(f"**Pages:** {row.get('Pages', 'N/A')}")
+                        st.markdown(f"**Published:** {row.get('Year', row.get('Published', 'N/A'))}")
+                        st.markdown(f"**Language:** {row.get('Language', 'N/A')}")
+                        st.markdown(f"**Publisher:** {row.get('Publisher', 'N/A')}")
+                        st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
+
+                        if row.get('link'):
+                            st.markdown(f"""<a href="{row['link']}" target="_blank">
+                                            <button class="grey-button">🔗 Visit Link</button></a>""",
+                                        unsafe_allow_html=True)
+
+                        if st.button("❤️ Add to Favorites", key=f"modal_fav_{row['i']}"):
+                            if row['i'] not in st.session_state.favorites:
+                                st.session_state.favorites.append(row['i'])
+
+                        if st.button("❌ Close", key=f"close_{row['i']}"):
+                            st.session_state.expanded_book_id = None
