@@ -122,6 +122,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                         st.markdown("<div style='padding: 0.5rem;'>&nbsp;</div>", unsafe_allow_html=True)
         for col, (_, row) in zip(cols, row_group.iterrows()):
             with col:
+                st.markdown('<div class="book-section" style="padding: 1rem; background-color: #ffffff; border: 1px solid #ddd; border-radius: 12px; margin-bottom: 1rem; min-height: 420px; display: flex; flex-direction: column; justify-content: space-between;">', unsafe_allow_html=True)
                 st.markdown('<div class="book-card">', unsafe_allow_html=True)
                 author = row.get('Author', 'Unknown')
                 genre = row.get('Subjects', '').split(',')[0] if row.get('Subjects') else 'N/A'
