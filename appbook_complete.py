@@ -78,7 +78,7 @@ st.sidebar.markdown("Select your Personal Library User ID to see book recommenda
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 
 # ---------- RENDER BOOKS VERTICALLY ----------
-def render_books_vertical(df, prefix):
+def render_books_vertical(df, prefix, always_expanded=False):
     for _, row in df.iterrows():
         with st.container():
             st.markdown('<div class="book-card">', unsafe_allow_html=True)
@@ -93,22 +93,23 @@ def render_books_vertical(df, prefix):
             else:
                 st.caption(description)
 
-            st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
-                    if row['i'] not in st.session_state.favorites:
-                        st.session_state.favorites.append(row['i'])
-            with col2:
-                if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
-                    if st.session_state.expanded_book_id == row['i']:
-                        st.session_state.expanded_book_id = None
-                    else:
-                        st.session_state.expanded_book_id = row['i']
-            st.markdown('</div>', unsafe_allow_html=True)
-            st.markdown('</div></div>', unsafe_allow_html=True)
+            if not always_expanded:
+                st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
+                        if row['i'] not in st.session_state.favorites:
+                            st.session_state.favorites.append(row['i'])
+                with col2:
+                    if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
+                        if st.session_state.expanded_book_id == row['i']:
+                            st.session_state.expanded_book_id = None
+                        else:
+                            st.session_state.expanded_book_id = row['i']
+                st.markdown('</div>', unsafe_allow_html=True)
+                st.markdown('</div></div>', unsafe_allow_html=True)
 
-            if st.session_state.expanded_book_id == row['i']:
+            if always_expanded or st.session_state.expanded_book_id == row['i']:
                 with st.expander("📓 Book Details", expanded=True):
                     st.image(row['image'], width=160)
                     st.markdown("### Details")
@@ -139,7 +140,7 @@ book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_titles))
 if st.sidebar.button("View Book Details"):
     book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
-    render_books_vertical(pd.DataFrame([book_info]), "picker")
+    render_books_vertical(pd.DataFrame([book_info]), "picker", always_expanded=True)
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
@@ -151,7 +152,7 @@ if search_query:
         merged_df['Subjects'].str.contains(search_query, case=False, na=False)
     ]
     st.subheader(f"Found {len(results)} result(s):")
-    render_books_vertical(results.head(15), "search")
+    render_books_vertical(results.head(15), "search", always_expanded=True)
 
 # ---------- FAVORITES ----------
 if st.session_state.favorites:
