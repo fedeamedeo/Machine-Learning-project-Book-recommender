@@ -127,7 +127,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                 image_url = row.get('image')
                 st.image(image_url if isinstance(image_url, str) and image_url.startswith("http")
                          else "https://via.placeholder.com/140x210?text=No+Cover", width=140)
-                st.markdown('<div class="book-info">', unsafe_allow_html=True)
+                
                 
                 description = row.get("Description") or row.get("synopsis", "No description available.")
 
