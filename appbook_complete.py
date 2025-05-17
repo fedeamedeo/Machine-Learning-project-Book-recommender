@@ -61,8 +61,11 @@ if st.session_state.page == "home":
                         st.markdown(f"**{row['Title']}**")
                         st.caption(row.get('Author', 'Unknown'))
 
-                        if row.get('Subjects'):
-                            st.caption(row['Subjects'].split(',')[0])
+                        st.caption(row.get('Author', 'Unknown'))
+
+                        subjects = row.get('Subjects')
+                        if isinstance(subjects, str):
+                            st.caption(subjects.split(',')[0])
 
                         count = interactions_df[interactions_df['i'] == row['i']].shape[0]
                         st.caption(f"👥 {count} visualizations")
