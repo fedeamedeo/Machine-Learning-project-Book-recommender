@@ -5,7 +5,7 @@ import pandas as pd
 st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_sidebar_state="expanded")
 
 # ---------- GLOBAL STYLES ----------
-st.markdown("""
+st.st.markdown("""
     <style>
         .grey-button {
             background-color: #e0e0e0 !important;
@@ -18,6 +18,7 @@ st.markdown("""
         .grey-button:hover {
             background-color: #d5d5d5 !important;
         }
+
         .book-card {
             display: flex;
             gap: 2rem;
@@ -33,25 +34,41 @@ st.markdown("""
         .book-card:hover {
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
+
         .book-content {
             display: flex;
             gap: 2rem;
             width: 100%;
             align-items: flex-start;
         }
+
         .book-info {
             flex-grow: 1;
         }
+
         .book-buttons {
             display: flex;
             gap: 1.2rem;
             margin-top: 0.75rem;
         }
+
+        /* Hide empty Streamlit columns (removes the white bar issue) */
+        .stColumn > div:empty {
+            display: none !important;
+        }
+
+        /* Reduce spacing between rows of columns */
+        .stColumns {
+            margin-bottom: 0rem !important;
+        }
+
+        /* Hide empty containers to keep layout clean */
         .block-container > div:has(.element-container:empty) {
             display: none;
         }
     </style>
 """, unsafe_allow_html=True)
+
 
 # ---------- SESSION STATE ----------
 if "favorites" not in st.session_state:
