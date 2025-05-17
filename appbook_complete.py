@@ -24,9 +24,14 @@ st.markdown("""
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             transition: all 0.3s ease-in-out;
+            margin-bottom: 0.5rem;
         }
         .book-card:hover {
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        section.main > div > div > div > div {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -58,51 +63,49 @@ user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 # ---------- RENDER BOOKS VERTICALLY ----------
 def render_books_vertical(df, prefix):
     for _, row in df.iterrows():
-        with st.container():
-            with st.container():
-                st.markdown('<div class="book-card">', unsafe_allow_html=True)
-                st.image(row['image'], width=100)
-                st.markdown(f"**{row['Title']}**")
-                st.caption(row.get('Author', 'Unknown'))
-                if isinstance(row.get('Subjects'), str):
-                    st.caption(row['Subjects'].split(',')[0])
-                count = interactions_df[interactions_df['i'] == row['i']].shape[0]
-                st.caption(f"👥 {count} visualizations")
+        st.markdown('<div class="book-card">', unsafe_allow_html=True)
+        st.image(row['image'], width=100)
+        st.markdown(f"**{row['Title']}**")
+        st.caption(row.get('Author', 'Unknown'))
+        if isinstance(row.get('Subjects'), str):
+            st.caption(row['Subjects'].split(',')[0])
+        count = interactions_df[interactions_df['i'] == row['i']].shape[0]
+        st.caption(f"👥 {count} visualizations")
 
-                description = row.get("Description", "No description available.")
-                if len(description) > 120:
-                    st.caption(description[:120] + "...")
-                else:
-                    st.caption(description)
+        description = row.get("Description", "No description available.")
+        if len(description) > 120:
+            st.caption(description[:120] + "...")
+        else:
+            st.caption(description)
 
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
-                        if row['i'] not in st.session_state.favorites:
-                            st.session_state.favorites.append(row['i'])
-                with col2:
-                    if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
-                        st.session_state.expanded_book_id = row['i']
-                st.markdown('</div>', unsafe_allow_html=True)
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
+                if row['i'] not in st.session_state.favorites:
+                    st.session_state.favorites.append(row['i'])
+        with col2:
+            if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
+                st.session_state.expanded_book_id = row['i']
+        st.markdown('</div>', unsafe_allow_html=True)
 
-            if st.session_state.expanded_book_id == row['i']:
-                with st.expander("📖 Book Details", expanded=True):
-                    st.image(row['image'], width=160)
-                    st.markdown("### Details")
-                    st.write(description)
-                    st.markdown(f"**Author:** {row.get('Author', 'N/A')}")
-                    st.markdown(f"**Pages:** {row.get('Pages', 'N/A')}")
-                    st.markdown(f"**Published:** {row.get('Year', row.get('Published', 'N/A'))}")
-                    st.markdown(f"**Language:** {row.get('Language', 'N/A')}")
-                    st.markdown(f"**Publisher:** {row.get('Publisher', 'N/A')}")
-                    st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
-                    if row.get('link'):
-                        st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
-                    if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
-                        if row['i'] not in st.session_state.favorites:
-                            st.session_state.favorites.append(row['i'])
-                    if st.button("❌ Close", key=f"{prefix}_close_{row['i']}"):
-                        st.session_state.expanded_book_id = None
+        if st.session_state.expanded_book_id == row['i']:
+            with st.expander("📖 Book Details", expanded=True):
+                st.image(row['image'], width=160)
+                st.markdown("### Details")
+                st.write(description)
+                st.markdown(f"**Author:** {row.get('Author', 'N/A')}")
+                st.markdown(f"**Pages:** {row.get('Pages', 'N/A')}")
+                st.markdown(f"**Published:** {row.get('Year', row.get('Published', 'N/A'))}")
+                st.markdown(f"**Language:** {row.get('Language', 'N/A')}")
+                st.markdown(f"**Publisher:** {row.get('Publisher', 'N/A')}")
+                st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
+                if row.get('link'):
+                    st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
+                if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
+                    if row['i'] not in st.session_state.favorites:
+                        st.session_state.favorites.append(row['i'])
+                if st.button("❌ Close", key=f"{prefix}_close_{row['i']}"):
+                    st.session_state.expanded_book_id = None
 
 # ---------- RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations"):
