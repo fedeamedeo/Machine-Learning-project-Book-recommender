@@ -7,63 +7,67 @@ st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_si
 # ---------- GLOBAL STYLES ----------
 st.markdown("""
     <style>
-        .grey-button {
-            background-color: #e0e0e0 !important;
-            color: black !important;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .grey-button:hover {
-            background-color: #d5d5d5 !important;
-        }
+    .grey-button {
+        background-color: #e0e0e0 !important;
+        color: black !important;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .grey-button:hover {
+        background-color: #d5d5d5 !important;
+    }
 
-        .book-card {
-            display: flex;
-            gap: 2rem;
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-            transition: box-shadow 0.3s ease-in-out;
-            margin-bottom: 1rem;
-            align-items: flex-start;
-            background-color: #ffffff;
-            flex-direction: column;
-        }
-        .book-card:hover {
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
+    .book-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem;
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        background-color: #fdfdfd;
+        transition: transform 0.2s ease;
+    }
+    .book-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
 
-        .book-content {
-            display: flex;
-            gap: 2rem;
-            width: 100%;
-            align-items: flex-start;
-        }
+    .book-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+    }
 
-        .book-info {
-            flex-grow: 1;
-        }
+    .book-info {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+        color: #333;
+    }
 
-        .book-buttons {
-            display: flex;
-            gap: 1.2rem;
-            margin-top: 0.75rem;
-        }
+    .book-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
 
-        .stColumn > div:empty {
-            display: none !important;
-        }
-
-        .stColumns {
-            margin-bottom: 0rem !important;
-        }
-
-        .block-container > div:has(.element-container:empty) {
-            display: none;
-        }
-    </style>
+    .stColumn > div:empty {
+        display: none !important;
+    }
+    .stColumns {
+        margin-bottom: 0rem !important;
+    }
+    .block-container > div:has(.element-container:empty) {
+        display: none;
+    }
+</style>
 """, unsafe_allow_html=True)
 
 # ---------- SESSION STATE ----------
