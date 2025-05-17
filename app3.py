@@ -95,6 +95,12 @@ user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_titles))
 
+# ---------- VIEW RECOMMENDATIONS ----------
+if st.sidebar.button("Show Recommendations", key="show_recs_button"):
+    user_row = recs_df[recs_df['user_id'] == user_id]
+    if not user_row.empty:
+        st.session_state.recommended_book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
+
 # ---------- RENDER BOOKS VERTICALLY ----------
 def render_books_vertical(df, prefix, allow_expansion=True):
     rows = [df.iloc[i:i+3] for i in range(0, len(df), 3)]
@@ -145,11 +151,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                             if row['i'] not in st.session_state.favorites:
                                 st.session_state.favorites.append(row['i'])
 
-# ---------- VIEW RECOMMENDATIONS ----------
-if st.sidebar.button("Show Recommendations", key="show_recs_button"):
-    user_row = recs_df[recs_df['user_id'] == user_id]
-    if not user_row.empty:
-        st.session_state.recommended_book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
+
 
 if st.session_state.recommended_book_ids:
     recommended_books = merged_df[merged_df['i'].isin(st.session_state.recommended_book_ids)]
