@@ -126,7 +126,7 @@ st.title("🔍 Search the Book Database")
 search_query = st.text_input("Search for a book by title, author, or subject:")
 if search_query:
     results = merged_df[
-        merged_df['Title'].str.contains(search_query, case=False, na=False) |
+        merged_df['title'].str.contains(search_query, case=False, na=False) |
         merged_df['Author'].str.contains(search_query, case=False, na=False) |
         merged_df['Subjects'].str.contains(search_query, case=False, na=False)
     ]
@@ -136,7 +136,7 @@ if search_query:
         with cols[i % 5]:
             with st.container(border=True):
                 st.image(row['image'], width=120)
-                st.markdown(f"**{row['Title']}**")
+                st.markdown(f"**{row['title']}**")
                 st.caption(row['Author'])
 
                 if isinstance(row.get('Subjects'), str):
@@ -161,7 +161,7 @@ if st.session_state.favorites:
         with cols[i % 5]:
             with st.container(border=True):
                 st.image(row['image'], width=120)
-                st.markdown(f"**{row['Title']}**")
+                st.markdown(f"**{row['title']}**")
                 st.caption(row['Author'])
                 if isinstance(row.get('Subjects'), str):
                     st.caption(row['Subjects'].split(',')[0])
