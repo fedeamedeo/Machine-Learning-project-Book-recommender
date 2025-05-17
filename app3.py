@@ -113,12 +113,6 @@ def render_books_vertical(df, prefix, allow_expansion=True):
     for row_group in rows:
         if not row_group.empty:
             cols = st.columns(len(row_group), gap="small")
-            for idx, col in enumerate(cols):
-                if idx >= len(row_group):
-                    continue
-                book_title = row_group.iloc[idx]['title']
-                with col:
-                    st.markdown(f"<div style='text-align: center; padding: 0.5rem; font-weight: 600;'>{book_title}</div>", unsafe_allow_html=True)
         for col, (_, row) in zip(cols, row_group.iterrows()):
             with col:
                 st.markdown('<div class="book-card">', unsafe_allow_html=True)
