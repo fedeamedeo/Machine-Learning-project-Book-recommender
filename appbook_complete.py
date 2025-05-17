@@ -58,8 +58,8 @@ if "favorites" not in st.session_state:
     st.session_state.favorites = []
 if "expanded_book_id" not in st.session_state:
     st.session_state.expanded_book_id = None
-if "expanded_sidebar_book" not in st.session_state:
-    st.session_state.expanded_sidebar_book = False
+if "expanded_sidebar_book_id" not in st.session_state:
+    st.session_state.expanded_sidebar_book_id = None
 
 # ---------- DATA LOADING ----------
 @st.cache_data
@@ -145,35 +145,13 @@ if st.sidebar.button("Show Recommendations"):
 book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📖 Pick a Book Title", sorted(book_titles))
 if st.sidebar.button("View Book Details"):
-    st.session_state.expanded_sidebar_book = not st.session_state.expanded_sidebar_book
     book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
-    st.subheader("📘 Book Details")
-    st.image(book_info['image'], width=150)
-    st.markdown(f"**{book_info['title_long']}**")
-    st.caption(book_info['Author'])
-    if isinstance(book_info.get('Subjects'), str):
-        st.caption(book_info['Subjects'].split(',')[0])
-    st.caption(f"👥 {interactions_df[interactions_df['i'] == book_info['i']].shape[0]} visualizations")
-    if st.button("❤️ Save to Favorites"):
-        if book_info['i'] not in st.session_state.favorites:
-            st.session_state.favorites.append(book_info['i'])
+    st.session_state.expanded_sidebar_book_id = book_info['i']
 
-if st.session_state.expanded_sidebar_book:
-    with st.expander("📖 Book Details", expanded=True):
-        st.image(book_info['image'], width=160)
-        st.markdown("### Details")
-        st.write(book_info.get("Description") or book_info.get("synopsis", "No description available."))
-        st.markdown(f"**Author:** {book_info.get('Author', 'Unknown')}")
-        st.markdown(f"**Pages:** {book_info.get('Pages', book_info.get('pages', 'N/A'))}")
-        st.markdown(f"**Published:** {book_info.get('Year', book_info.get('date_published', 'N/A'))}")
-        st.markdown(f"**Language:** {book_info.get('language', book_info.get('language', 'N/A'))}")
-        st.markdown(f"**Publisher:** {book_info.get('publisher', book_info.get('Publisher', 'N/A'))}")
-        st.markdown(f"**Subjects:** {book_info.get('Subjects', 'N/A')}")
-        if book_info.get('link'):
-            st.markdown(f"""<a href=\"{book_info['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
-        if st.button("❤️ Add to Favorites", key=f"sidebar_modal_fav_{book_info['i']}"):
-            if book_info['i'] not in st.session_state.favorites:
-                st.session_state.favorites.append(book_info['i'])
+if st.session_state.expanded_sidebar_book_id is not None:
+    sidebar_book = merged_df[merged_df['i'] == st.session_state.expanded_sidebar_book_id].iloc[0]
+    st.subheader("📘 Book Details")
+    render_books_vertical(pd.DataFrame([sidebar_book]), "sidebar")
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
