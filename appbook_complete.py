@@ -3,7 +3,22 @@ import pandas as pd
 
 # ---------- CONFIG ----------
 st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_sidebar_state="expanded")
-
+# ---------- GLOBAL STYLES ----------
+st.markdown("""
+    <style>
+        .grey-button {
+            background-color: #e0e0e0 !important;
+            color: black !important;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .grey-button:hover {
+            background-color: #d5d5d5 !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
 # ---------- SESSION STATE ----------
 if "favorites" not in st.session_state:
     st.session_state.favorites = []
@@ -134,5 +149,30 @@ if search_query:
                 col1, col2 = st.columns(2)
                 with col2:
                     if st.button("❤️", key=f"search_{row['i']}"):
+                        if row['i'] not in st.session_state.favorites:
+                            st.session_state.favorites.append(row['i'])
+# ---------- FAVORITES ----------
+if st.session_state.favorites:
+    st.subheader("⭐ Your Favorite Books")
+    fav_books = merged_df[merged_df['i'].isin(st.session_state.favorites)]
+    if st.button("🗑️ Clear Favorites"):
+        st.session_state.favorites = []
+
+    cols = st.columns(5)
+    for i, (_, row) in enumerate(fav_books.iterrows()):
+        with cols[i % 5]:
+            with st.container(border=True):
+                st.image(row['image'], width=120)
+                st.markdown(f"**{row['Title']}**")
+                st.caption(row['Author'])
+                if isinstance(row.get('Subjects'), str):
+                    st.caption(row['Subjects'].split(',')[0])
+                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
+                col1, col2 = st.columns(2)
+                with col1:
+                    if row.get('link'):
+                        st.markdown(f"""<a href="{row['link']}" target="_blank"><button class="grey-button" style="width: 100%">🔗</button></a>""", unsafe_allow_html=True)
+                with col2:
+                    if st.button("❤️", key=f"fav_{row['i']}"):
                         if row['i'] not in st.session_state.favorites:
                             st.session_state.favorites.append(row['i'])
