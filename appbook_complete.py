@@ -156,7 +156,7 @@ selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_title
 if st.sidebar.button("View Book Details"):
     book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
     st.session_state.expanded_book_id = book_info["i"]
-    render_books_scrollable(pd.DataFrame([book_info]), "picker")
+    render_books_vertical(pd.DataFrame([book_info]), "picker")
 
 # ---------- BOOKS BY GENRE ----------
 st.header("🎨 Books by Genre")
@@ -165,7 +165,7 @@ for genre in genres:
     genre_books = merged_df[merged_df['Subjects'].fillna("").str.contains(genre, case=False, na=False)]
     if not genre_books.empty:
         st.subheader(f"📚 {genre.title()}")
-        render_books_scrollable(genre_books.head(10), f"genre_{genre}")
+        render_books_vertical(genre_books.head(10), f"genre_{genre}")
 
 # ---------- DARK MODE ----------
 dark_mode = st.sidebar.checkbox("🌙 Enable Dark Mode")
