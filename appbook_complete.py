@@ -5,7 +5,7 @@ import pandas as pd
 st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_sidebar_state="expanded")
 
 # ---------- GLOBAL STYLES ----------
-st.st.markdown("""
+st.markdown("""
     <style>
         .grey-button {
             background-color: #e0e0e0 !important;
@@ -27,7 +27,7 @@ st.st.markdown("""
             box-shadow: 0 4px 18px rgba(0,0,0,0.08);
             transition: box-shadow 0.3s ease-in-out;
             margin-bottom: 1rem;
-            align-merged: flex-start;
+            align-items: flex-start;
             background-color: #ffffff;
             flex-direction: column;
         }
@@ -39,7 +39,7 @@ st.st.markdown("""
             display: flex;
             gap: 2rem;
             width: 100%;
-            align-merged: flex-start;
+            align-items: flex-start;
         }
 
         .book-info {
@@ -52,50 +52,50 @@ st.st.markdown("""
             margin-top: 0.75rem;
         }
 
-        /* Hide empty Streamlit columns (removes the white bar issue) */
         .stColumn > div:empty {
             display: none !important;
         }
 
-        /* Reduce spacing between rows of columns */
         .stColumns {
             margin-bottom: 0rem !important;
         }
 
-        /* Hide empty containers to keep layout clean */
         .block-container > div:has(.element-container:empty) {
             display: none;
         }
     </style>
 """, unsafe_allow_html=True)
 
-
 # ---------- SESSION STATE ----------
 if "favorites" not in st.session_state:
     st.session_state.favorites = []
 if "expanded_book_id" not in st.session_state:
     st.session_state.expanded_book_id = None
+
 # ---------- DATA LOADING ----------
 @st.cache_data
 def load_data():
     recs = pd.read_csv("tf_idf.csv")
-    
     interactions = pd.read_csv("interactions_train1.csv")
     merged = pd.read_csv("books_complete.csv")
     return recs, interactions, merged
 
-recs_df,interactions_df, merged_df = load_data()
+recs_df, interactions_df, merged_df = load_data()
 
 # ---------- SIDEBAR ----------
 st.sidebar.title("Book Recommendations")
-st.sidebar.image("https://media.istockphoto.com/id/1210557301/photo/magic-book-open.jpg?s=612x612&w=0&k=20&c=2T9x_Z_by3QEeo2DdPOapMUi545Zi10V-eDwg6ToUoI=", width=300)
+st.sidebar.image("https://media.istockphoto.com/id/1210557301/photo/magic-book-open.jpg", width=300)
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
 st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 
+# ---------- BOOK PICKER ----------
+book_titles = merged_df['title_long'].dropna().unique()
+selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_titles))
+
 # ---------- RENDER BOOKS VERTICALLY ----------
 def render_books_vertical(df, prefix, allow_expansion=True):
-    rows = [df.iloc[i:i+3] for i in range(0, len(df), 3)]  # Now 3 books per row
+    rows = [df.iloc[i:i+3] for i in range(0, len(df), 3)]
     for row_group in rows:
         cols = st.columns(len(row_group))
         for col, (_, row) in zip(cols, row_group.iterrows()):
@@ -103,20 +103,12 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                 st.markdown('<div class="book-card">', unsafe_allow_html=True)
                 st.markdown('<div class="book-content">', unsafe_allow_html=True)
                 image_url = row.get('image')
-                if isinstance(image_url, str) and image_url.startswith("http"):
-                    st.image(image_url, width=140)
-                else:
-                    st.image("https://via.placeholder.com/140x210?text=No+Cover", width=140)
-
+                st.image(image_url if isinstance(image_url, str) and image_url.startswith("http")
+                         else "https://via.placeholder.com/140x210?text=No+Cover", width=140)
                 st.markdown('<div class="book-info">', unsafe_allow_html=True)
                 st.markdown(f"**{row['title']}**")
-
                 description = row.get("Description") or row.get("synopsis", "No description available.")
-                if isinstance(description, str) and len(description) > 120:
-                    st.caption(description[:120] + "...")
-                else:
-                    st.caption(description)
-
+                st.caption(description[:120] + "..." if isinstance(description, str) and len(description) > 120 else description)
                 if allow_expansion:
                     st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
                     col1, col2 = st.columns(2)
@@ -126,20 +118,13 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                                 st.session_state.favorites.append(row['i'])
                     with col2:
                         if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
-                            if st.session_state.expanded_book_id == row['i']:
-                                st.session_state.expanded_book_id = None
-                            else:
-                                st.session_state.expanded_book_id = row['i']
+                            st.session_state.expanded_book_id = None if st.session_state.expanded_book_id == row['i'] else row['i']
                     st.markdown('</div>', unsafe_allow_html=True)
                     st.markdown('</div></div>', unsafe_allow_html=True)
-
                 if allow_expansion and st.session_state.expanded_book_id == row['i']:
                     with st.expander("📓 Book Details", expanded=True):
-                        if isinstance(image_url, str) and image_url.startswith("http"):
-                            st.image(image_url, width=180)
-                        else:
-                            st.image("https://via.placeholder.com/180x270?text=No+Cover", width=180)
-
+                        st.image(image_url if isinstance(image_url, str) and image_url.startswith("http")
+                                 else "https://via.placeholder.com/180x270?text=No+Cover", width=180)
                         st.markdown("### Details")
                         st.write(description)
                         st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
@@ -154,7 +139,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                             if row['i'] not in st.session_state.favorites:
                                 st.session_state.favorites.append(row['i'])
 
-# ---------- RECOMMENDATIONS ----------
+# ---------- VIEW RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations"):
     user_row = recs_df[recs_df['user_id'] == user_id]
     if not user_row.empty:
@@ -163,9 +148,7 @@ if st.sidebar.button("Show Recommendations"):
         st.subheader("📖 Top Book Picks for You")
         render_books_vertical(recommended_books, "rec")
 
-# ---------- BOOK PICKER ----------
-book_titles = merged_df['title_long'].dropna().unique()
-selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_titles))
+# ---------- VIEW SELECTED BOOK ----------
 if st.sidebar.button("View Book Details"):
     book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
     render_books_vertical(pd.DataFrame([book_info]), "picker", allow_expansion=True)
