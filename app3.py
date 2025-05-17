@@ -106,7 +106,7 @@ selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_title
 
 # ---------- RENDER BOOKS VERTICALLY ----------
 def render_books_vertical(df, prefix, allow_expansion=True):
-    rows = [df.iloc[i:i+3] for i in range(0, len(df), 3)]
+    rows = [df.iloc[i:i+4] for i in range(0, len(df), 4)]
     for row_group in rows:
         if not row_group.empty:
             cols = st.columns(len(row_group), gap="small")
