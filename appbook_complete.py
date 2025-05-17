@@ -29,9 +29,8 @@ st.markdown("""
         .book-card:hover {
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        section.main > div > div > div > div {
-            padding-top: 0.25rem;
-            padding-bottom: 0.25rem;
+        .block-container > div:has(.element-container:empty) {
+            display: none;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -159,4 +158,3 @@ st.header("🔥 Most Popular Books")
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = merged_df[merged_df['i'].isin(popular_ids)]
 render_books_vertical(popular_books, "pop")
-# ---------- FOOTER ----------
