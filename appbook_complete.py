@@ -88,67 +88,33 @@ st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book 
 st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 
-
 # ---------- RENDER BOOK SCROLLABLE ----------
-def render_books_vertical(df, prefix, allow_expansion=True):
-    rows = [df.iloc[i:i+3] for i in range(0, len(df), 3)]
-    for row_group in rows:
-        cols = st.columns(len(row_group))
-        for col, (_, row) in zip(cols, row_group.iterrows()):
-            with col:
-                st.markdown('<div class="book-card">', unsafe_allow_html=True)
-                st.markdown('<div class="book-content">', unsafe_allow_html=True)
-                image_url = row.get('image')
-                if isinstance(image_url, str) and image_url.startswith("http"):
-                    st.image(image_url, width=140)
-                else:
-                    st.image("https://via.placeholder.com/140x210?text=No+Cover", width=140)
-
-                st.markdown('<div class="book-info">', unsafe_allow_html=True)
-                st.markdown(f"**{row['title']}**")
-
-                description = row.get("Description") or row.get("synopsis", "No description available.")
-                if isinstance(description, str) and len(description) > 120:
-                    st.caption(description[:120] + "...")
-                else:
-                    st.caption(description)
-
-                if allow_expansion:
-                    st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
-                            if row['i'] not in st.session_state.favorites:
-                                st.session_state.favorites.append(row['i'])
-                    with col2:
-                        if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
-                            if st.session_state.expanded_book_id == row['i']:
-                                st.session_state.expanded_book_id = None
-                            else:
-                                st.session_state.expanded_book_id = row['i']
-                    st.markdown('</div>', unsafe_allow_html=True)
-                    st.markdown('</div></div>', unsafe_allow_html=True)
-
-                if allow_expansion and st.session_state.expanded_book_id == row['i']:
-                    with st.expander("📓 Book Details", expanded=True):
-                        if isinstance(image_url, str) and image_url.startswith("http"):
-                            st.image(image_url, width=180)
-                        else:
-                            st.image("https://via.placeholder.com/180x270?text=No+Cover", width=180)
-
-                        st.markdown("### Details")
-                        st.write(description)
-                        st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
-                        st.markdown(f"**Pages:** {row.get('Pages', row.get('pages', 'N/A'))}")
-                        st.markdown(f"**Published:** {row.get('Year', row.get('date_published', 'N/A'))}")
-                        st.markdown(f"**Language:** {row.get('language', row.get('Language', 'N/A'))}")
-                        st.markdown(f"**Publisher:** {row.get('publisher', row.get('Publisher', 'N/A'))}")
-                        st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
-                        if row.get('link'):
-                            st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
-                        if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
-                            if row['i'] not in st.session_state.favorites:
-                                st.session_state.favorites.append(row['i'])
+def render_books_scrollable(df, prefix):
+    st.markdown('<div class="book-row-scroll">', unsafe_allow_html=True)
+    for _, row in df.iterrows():
+        st.markdown('<div class="book-card">', unsafe_allow_html=True)
+        image_url = row.get('image')
+        if isinstance(image_url, str) and image_url.startswith("http"):
+            st.image(image_url, width=120)
+        else:
+            st.image("https://via.placeholder.com/120x180?text=No+Cover", width=120)
+        st.markdown(f"#### {row['title']}")
+        description = row.get("Description") or row.get("synopsis", "No description available.")
+        if isinstance(description, str) and len(description) > 100:
+            st.caption(description[:100] + "...")
+        else:
+            st.caption(description)
+        if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
+            st.session_state.expanded_book_id = row['i']
+        if st.session_state.expanded_book_id == row['i']:
+            st.markdown("### Details")
+            st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
+            st.markdown(f"**Published:** {row.get('Year', row.get('date_published', 'N/A'))}")
+            st.markdown(f"**Language:** {row.get('language', row.get('Language', 'N/A'))}")
+            st.markdown(f"**Publisher:** {row.get('publisher', row.get('Publisher', 'N/A'))}")
+            st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
+        st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- BOOK PICKER ----------
 book_titles = merged_df['title_long'].dropna().unique()
@@ -156,7 +122,7 @@ selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_title
 if st.sidebar.button("View Book Details"):
     book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
     st.session_state.expanded_book_id = book_info["i"]
-    render_books_vertical(pd.DataFrame([book_info]), "picker")
+    render_books_scrollable(pd.DataFrame([book_info]), "picker")
 
 # ---------- BOOKS BY GENRE ----------
 st.header("🎨 Books by Genre")
@@ -165,7 +131,7 @@ for genre in genres:
     genre_books = merged_df[merged_df['Subjects'].fillna("").str.contains(genre, case=False, na=False)]
     if not genre_books.empty:
         st.subheader(f"📚 {genre.title()}")
-        render_books_vertical(genre_books.head(10), f"genre_{genre}")
+        render_books_scrollable(genre_books.head(10), f"genre_{genre}")
 
 # ---------- DARK MODE ----------
 dark_mode = st.sidebar.checkbox("🌙 Enable Dark Mode")
