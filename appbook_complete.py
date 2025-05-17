@@ -78,7 +78,7 @@ st.sidebar.markdown("Select your Personal Library User ID to see book recommenda
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 
 # ---------- RENDER BOOKS VERTICALLY ----------
-def render_books_vertical(df, prefix, always_expanded=False):
+def render_books_vertical(df, prefix, allow_expansion=True):
     rows = [df.iloc[i:i+2] for i in range(0, len(df), 2)]
     for row_group in rows:
         cols = st.columns(len(row_group))
@@ -96,7 +96,7 @@ def render_books_vertical(df, prefix, always_expanded=False):
                 else:
                     st.caption(description)
 
-                if not always_expanded:
+                if allow_expansion:
                     st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
                     col1, col2 = st.columns(2)
                     with col1:
@@ -112,7 +112,7 @@ def render_books_vertical(df, prefix, always_expanded=False):
                     st.markdown('</div>', unsafe_allow_html=True)
                     st.markdown('</div></div>', unsafe_allow_html=True)
 
-                if always_expanded or st.session_state.expanded_book_id == row['i']:
+                if allow_expansion and st.session_state.expanded_book_id == row['i']:
                     with st.expander("📓 Book Details", expanded=True):
                         st.image(row['image'], width=160)
                         st.markdown("### Details")
@@ -143,7 +143,7 @@ book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_titles))
 if st.sidebar.button("View Book Details"):
     book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
-    render_books_vertical(pd.DataFrame([book_info]), "picker", always_expanded=True)
+    render_books_vertical(pd.DataFrame([book_info]), "picker", allow_expansion=True)
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
@@ -155,7 +155,7 @@ if search_query:
         merged_df['Subjects'].str.contains(search_query, case=False, na=False)
     ]
     st.subheader(f"Found {len(results)} result(s):")
-    render_books_vertical(results.head(15), "search", always_expanded=True)
+    render_books_vertical(results.head(15), "search", allow_expansion=True)
 
 # ---------- FAVORITES ----------
 if st.session_state.favorites:
