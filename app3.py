@@ -110,7 +110,11 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                 st.markdown('<div class="book-info">', unsafe_allow_html=True)
                 st.markdown(f"**{row['title']}**")
                 description = row.get("Description") or row.get("synopsis", "No description available.")
-                st.caption(description[:120] + "..." if isinstance(description, str) and len(description) > 120 else description)
+                if prefix == "rec":
+                    pass  # skip caption for Top Picks
+                else:
+                    st.caption(description[:120] + "..." if isinstance(description, str) and len(description) > 120 else description)
+
                 if allow_expansion:
                     st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
                     col1, col2 = st.columns(2)
