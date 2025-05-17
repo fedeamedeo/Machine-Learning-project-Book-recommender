@@ -158,7 +158,7 @@ def render_books_vertical(df, prefix):
 if st.sidebar.button("Show Recommendations"):
     user_row = recs_df[recs_df['user_id'] == user_id]
     if not user_row.empty:
-        book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:]
+        book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
         recommended_books = merged_df[merged_df['i'].isin(book_ids)]
         st.subheader("📖 Top Book Picks for You")
         render_books_vertical(recommended_books, "rec")
