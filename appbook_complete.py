@@ -186,6 +186,7 @@ if search_query:
     ]
     st.subheader(f"Found {len(results)} result(s):")
     render_books_vertical(results.head(15), "search")
+    
 
 # ---------- FAVORITES ----------
 if st.session_state.favorites:
