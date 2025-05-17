@@ -4,6 +4,7 @@ import pandas as pd
 # ---------- CONFIG ----------
 st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_sidebar_state="expanded")
 
+
 # ---------- GLOBAL STYLES ----------
 st.markdown("""
     <style>
