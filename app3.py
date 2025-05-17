@@ -88,47 +88,8 @@ st.sidebar.image("https://media.istockphoto.com/id/1210557301/photo/magic-book-o
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
 st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
-
-# ---------- BOOK PICKER ----------
 book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_titles))
-
-# ---------- RECOMMENDATIONS ----------
-if st.sidebar.button("Show Recommendations"):
-    user_row = recs_df[recs_df['user_id'] == user_id]
-    if not user_row.empty:
-        book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
-        recommended_books = merged_df[merged_df['i'].isin(book_ids)]
-        st.subheader("📖 Top Book Picks for You")
-        render_books_vertical(recommended_books, "rec", allow_expansion=True)
-# ---------- RENDER BOOKS VERTICALLY ----------
-def render_books_vertical(df, prefix, allow_expansion=True):
-    rows = [df.iloc[i:i+3] for i in range(0, len(df), 3)]
-    for row_group in rows:
-        cols = st.columns(len(row_group))
-        for col, (_, row) in zip(cols, row_group.iterrows()):
-            with col:
-                st.markdown('<div class="book-card">', unsafe_allow_html=True)
-                st.markdown('<div class="book-content">', unsafe_allow_html=True)
-                image_url = row.get('image')
-                st.image(image_url if isinstance(image_url, str) and image_url.startswith("http")
-                         else "https://via.placeholder.com/140x210?text=No+Cover", width=140)
-                st.markdown('<div class="book-info">', unsafe_allow_html=True)
-                st.markdown(f"**{row['title']}**")
-                description = row.get("Description") or row.get("synopsis", "No description available.")
-                st.caption(description[:120] + "..." if isinstance(description, str) and len(description) > 120 else description)
-                if allow_expansion:
-                    st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
-                            if row['i'] not in st.session_state.favorites:
-                                st.session_state.favorites.append(row['i'])
-                    with col2:
-                        if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
-                            st.session_state.expanded_book_id = None if st.session_state.expanded_book_id == row['i'] else row['i']
-                            st.experimental_rerun()
-
 
 # ---------- RENDER BOOKS VERTICALLY ----------
 def render_books_vertical(df, prefix, allow_expansion=True):
@@ -177,16 +138,16 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                                 st.session_state.favorites.append(row['i'])
 
 # ---------- VIEW RECOMMENDATIONS ----------
-if st.sidebar.button("Show Recommendations"):
+if st.sidebar.button("Show Recommendations", key="show_recs_button"):
     user_row = recs_df[recs_df['user_id'] == user_id]
     if not user_row.empty:
         book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
         recommended_books = merged_df[merged_df['i'].isin(book_ids)]
         st.subheader("📖 Top Book Picks for You")
-        render_books_vertical(recommended_books, "rec")
+        render_books_vertical(recommended_books, "rec", allow_expansion=True)
 
 # ---------- VIEW SELECTED BOOK ----------
-if st.sidebar.button("View Book Details"):
+if st.sidebar.button("View Book Details", key="view_details_button"):
     book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
     render_books_vertical(pd.DataFrame([book_info]), "picker", allow_expansion=True)
 
@@ -214,7 +175,7 @@ if st.session_state.favorites:
 st.header("🔥 Most Popular Books")
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = merged_df[merged_df['i'].isin(popular_ids)]
-render_books_vertical(popular_books, "pop")
+render_books_vertical(popular_books, "pop", allow_expansion=True)
 
 # ---------- BOOKS BY GENRE ----------
 st.header("🎨 Books by Genre")
@@ -223,4 +184,4 @@ for genre in genres:
     genre_books = merged_df[merged_df['Subjects'].fillna("").str.contains(genre, case=False, na=False)]
     if not genre_books.empty:
         st.subheader(f"📚 {genre.title()}")
-        render_books_vertical(genre_books.head(6), prefix=genre.lower().replace(" ", "_"))
+        render_books_vertical(genre_books.head(6), prefix=genre.lower().replace(" ", "_"), allow_expansion=True)
