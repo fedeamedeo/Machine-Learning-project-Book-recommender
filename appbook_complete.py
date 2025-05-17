@@ -3,6 +3,7 @@ import pandas as pd
 
 # ---------- CONFIG ----------
 st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_sidebar_state="expanded")
+
 # ---------- GLOBAL STYLES ----------
 st.markdown("""
     <style>
@@ -19,6 +20,7 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+
 # ---------- SESSION STATE ----------
 if "favorites" not in st.session_state:
     st.session_state.favorites = []
@@ -43,83 +45,76 @@ st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book 
 st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 
-# ---------- MAIN AREA ----------
+# ---------- RENDER CARDS IN ROWS ----------
+def render_book_rows(df, prefix):
+    for row_idx in range(0, len(df), 5):
+        row_data = df.iloc[row_idx:row_idx+5]
+        cols = st.columns(len(row_data))
+        for col, (_, row) in zip(cols, row_data.iterrows()):
+            with col:
+                with st.container(border=True):
+                    st.image(row['image'], width=120)
+                    st.markdown(f"**{row['Title']}**")
+                    st.caption(row.get('Author', 'Unknown'))
+
+                    if isinstance(row.get('Subjects'), str):
+                        st.caption(row['Subjects'].split(',')[0])
+
+                    count = interactions_df[interactions_df['i'] == row['i']].shape[0]
+                    st.caption(f"👥 {count} visualizations")
+
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
+                            if row['i'] not in st.session_state.favorites:
+                                st.session_state.favorites.append(row['i'])
+                    with col2:
+                        if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
+                            st.session_state.expanded_book_id = row['i']
+
+                if st.session_state.expanded_book_id == row['i']:
+                    with st.expander("📖 Book Details", expanded=True):
+                        st.image(row['image'], width=160)
+                        st.markdown("### Details")
+                        st.write(row.get("Description", "No description available."))
+                        st.markdown(f"**Author:** {row.get('Author', 'N/A')}")
+                        st.markdown(f"**Pages:** {row.get('Pages', 'N/A')}")
+                        st.markdown(f"**Published:** {row.get('Year', row.get('Published', 'N/A'))}")
+                        st.markdown(f"**Language:** {row.get('Language', 'N/A')}")
+                        st.markdown(f"**Publisher:** {row.get('Publisher', 'N/A')}")
+                        st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
+
+                        if row.get('link'):
+                            st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">\ud83d\udd17 Visit Link</button></a>""", unsafe_allow_html=True)
+
+                        if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
+                            if row['i'] not in st.session_state.favorites:
+                                st.session_state.favorites.append(row['i'])
+
+                        if st.button("❌ Close", key=f"{prefix}_close_{row['i']}"):
+                            st.session_state.expanded_book_id = None
+
+# ---------- RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations"):
     user_row = recs_df[recs_df['user_id'] == user_id]
     if not user_row.empty:
         book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
         recommended_books = merged_df[merged_df['i'].isin(book_ids)]
-
         st.subheader("📖 Top Book Picks for You")
-        cols = st.columns(5)
-        for row_idx in range(0, len(recommended_books), 5):
-            row_data = recommended_books.iloc[row_idx:row_idx+5]
-            cols = st.columns(len(row_data))
-            for col, (_, row) in zip(cols, row_data.iterrows()):
-                with col:
-                    with st.container(border=True):
-                        st.image(row['image'], width=120)
-                        st.markdown(f"**{row['Title']}**")
-                        st.caption(row.get('Author', 'Unknown'))
-
-                        subjects = row.get('Subjects')
-                        if isinstance(subjects, str):
-                            st.caption(subjects.split(',')[0])
-
-                        count = interactions_df[interactions_df['i'] == row['i']].shape[0]
-                        st.caption(f"👥 {count} visualizations")
-
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            if st.button("❤️", key=f"fav_{row['i']}"):
-                                if row['i'] not in st.session_state.favorites:
-                                    st.session_state.favorites.append(row['i'])
-                        with col2:
-                            if st.button("More Info", key=f"info_{row['i']}"):
-                                st.session_state.expanded_book_id = row['i']
-                    if st.session_state.expanded_book_id == row['i']:
-                        with st.expander("📖 Book Details", expanded=True):
-                            st.image(row['image'], width=160)
-                            st.markdown("### Details")
-                            st.write(row.get("Description", "No description available."))
-                            st.markdown(f"**Author:** {row.get('Author', 'N/A')}")
-                            st.markdown(f"**Pages:** {row.get('Pages', 'N/A')}")
-                            st.markdown(f"**Published:** {row.get('Year', row.get('Published', 'N/A'))}")
-                            st.markdown(f"**Language:** {row.get('Language', 'N/A')}")
-                            st.markdown(f"**Publisher:** {row.get('Publisher', 'N/A')}")
-                            st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
-                            if row.get('link'):
-                                st.markdown(f"""<a href="{row['link']}" target="_blank">
-                                                <button class="grey-button">🔗 Visit Link</button></a>""",
-                                             unsafe_allow_html=True)
-
-                            if st.button("❤️ Add to Favorites", key=f"modal_fav_{row['i']}"):
-                                if row['i'] not in st.session_state.favorites:
-                                    st.session_state.favorites.append(row['i'])
-
-                            if st.button("❌ Close", key=f"close_{row['i']}"):
-                                st.session_state.expanded_book_id = None
-
-                
-
+        render_book_rows(recommended_books, "rec")
 
 # ---------- BOOK PICKER ----------
 book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📖 Pick a Book Title", sorted(book_titles))
 if st.sidebar.button("View Book Details"):
     book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
-
-    st.subheader("📘 Book Details")
+    st.subheader("📚 Book Details")
     st.image(book_info['image'], width=150)
     st.markdown(f"**{book_info['title_long']}**")
     st.caption(book_info['Author'])
-
-    subject = book_info.get('Subjects')
-    if isinstance(subject, str):
-        st.caption(subject.split(',')[0])
-
+    if isinstance(book_info.get('Subjects'), str):
+        st.caption(book_info['Subjects'].split(',')[0])
     st.caption(f"👥 {interactions_df[interactions_df['i'] == book_info['i']].shape[0]} visualizations")
-
     if st.button("❤️ Save to Favorites"):
         if book_info['i'] not in st.session_state.favorites:
             st.session_state.favorites.append(book_info['i'])
@@ -129,74 +124,23 @@ st.title("🔍 Search the Book Database")
 search_query = st.text_input("Search for a book by title, author, or subject:")
 if search_query:
     results = merged_df[
-        merged_df['title'].str.contains(search_query, case=False, na=False) |
+        merged_df['Title'].str.contains(search_query, case=False, na=False) |
         merged_df['Author'].str.contains(search_query, case=False, na=False) |
         merged_df['Subjects'].str.contains(search_query, case=False, na=False)
     ]
     st.subheader(f"Found {len(results)} result(s):")
-    cols = st.columns(5)
-    for i, (_, row) in enumerate(results.head(15).iterrows()):
-        with cols[i % 5]:
-            with st.container(border=True):
-                st.image(row['image'], width=120)
-                st.markdown(f"**{row['title']}**")
-                st.caption(row['Author'])
+    render_book_rows(results.head(15), "search")
 
-                if isinstance(row.get('Subjects'), str):
-                    st.caption(row['Subjects'].split(',')[0])
-
-                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
-
-                col1, col2 = st.columns(2)
-                with col2:
-                    if st.button("❤️", key=f"search_{row['i']}"):
-                        if row['i'] not in st.session_state.favorites:
-                            st.session_state.favorites.append(row['i'])
 # ---------- FAVORITES ----------
 if st.session_state.favorites:
     st.subheader("⭐ Your Favorite Books")
     fav_books = merged_df[merged_df['i'].isin(st.session_state.favorites)]
     if st.button("🗑️ Clear Favorites"):
         st.session_state.favorites = []
-
-    cols = st.columns(5)
-    for i, (_, row) in enumerate(fav_books.iterrows()):
-        with cols[i % 5]:
-            with st.container(border=True):
-                st.image(row['image'], width=120)
-                st.markdown(f"**{row['title']}**")
-                st.caption(row['Author'])
-                if isinstance(row.get('Subjects'), str):
-                    st.caption(row['Subjects'].split(',')[0])
-                st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
-                col1, col2 = st.columns(2)
-                with col1:
-                    if row.get('link'):
-                        st.markdown(f"""<a href="{row['link']}" target="_blank"><button class="grey-button" style="width: 100%">🔗</button></a>""", unsafe_allow_html=True)
-                with col2:
-                    if st.button("❤️", key=f"fav_{row['i']}"):
-                        if row['i'] not in st.session_state.favorites:
-                            st.session_state.favorites.append(row['i'])
+    render_book_rows(fav_books, "fav")
 
 # ---------- MOST POPULAR ----------
 st.header("🔥 Most Popular Books")
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = merged_df[merged_df['i'].isin(popular_ids)]
-cols = st.columns(5)
-for i, (_, row) in enumerate(popular_books.iterrows()):
-    with cols[i % 5]:
-        with st.container(border=True):
-            st.image(row['image'], width=120)
-            st.markdown(f"**{row['title']}**")
-            st.caption(row['Author'])
-            if row.get('Subjects'):
-                st.caption(row['Subjects'].split(',')[0])
-            st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
-            col1, col2 = st.columns(2)
-            with col1:
-                if row.get('link'):
-                    st.markdown(f"""<a href="{row['link']}" target="_blank"><button class="grey-button" style="width: 100%">🔗</button></a>""", unsafe_allow_html=True)
-            with col2:
-                if st.button("❤️", key=f"pop_{row['i']}"):
-                    if row['i'] not in st.session_state.favorites:
-                        st.session_state.favorites.append(row['i'])
+render_book_rows(popular_books, "pop")
