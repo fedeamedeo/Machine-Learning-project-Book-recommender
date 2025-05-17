@@ -163,7 +163,9 @@ if st.sidebar.button("View Book Details", key="view_details_button"):
     st.session_state.selected_book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
 
 if st.session_state.selected_book_info is not None:
+    st.markdown(f"### 📖 This is the book you chose: *{st.session_state.selected_book_info['title']}*")
     render_books_vertical(pd.DataFrame([st.session_state.selected_book_info]), "picker", allow_expansion=True)
+
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
