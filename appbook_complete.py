@@ -23,15 +23,15 @@ def load_data():
 
 recs_df, items_df, interactions_df, merged_df = load_data()
 
-# ---------- NAVIGATION ----------
-def go_to_home():
-    st.session_state.page = "home"
-
+# ---------- CALLBACKS ----------
 def go_to_details(book_id):
     st.session_state.selected_book_id = book_id
     st.session_state.page = "details"
 
-# ---------- PAGE: HOME ----------
+def go_to_home():
+    st.session_state.page = "home"
+
+# ---------- HOME PAGE ----------
 if st.session_state.page == "home":
     st.sidebar.title("Book Recommendations")
     st.sidebar.image(
@@ -64,43 +64,47 @@ if st.session_state.page == "home":
                         st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
 
                         col1, col2 = st.columns(2)
+
                         with col1:
                             if st.button("❤️", key=f"fav_{row['i']}"):
                                 if row['i'] not in st.session_state.favorites:
                                     st.session_state.favorites.append(row['i'])
-                        with col2:
-                            if st.button("More Info", key=f"info_{row['i']}"):
-                                go_to_details(row['i'])
 
-# ---------- PAGE: DETAILS ----------
+                        with col2:
+                            st.button("More Info", key=f"info_{row['i']}",
+                                      on_click=go_to_details, args=(row['i'],))
+
+# ---------- DETAILS PAGE ----------
 elif st.session_state.page == "details":
     book_id = st.session_state.selected_book_id
-    book = merged_df[merged_df['i'] == book_id].iloc[0]
 
-    st.subheader(f"📘 {book['Title']}")
-    col1, col2 = st.columns([1, 3])
+    if book_id is not None:
+        book = merged_df[merged_df['i'] == book_id].iloc[0]
 
-    with col1:
-        st.image(book['image'], width=160)
+        st.subheader(f"📘 {book['Title']}")
+        col1, col2 = st.columns([1, 3])
 
-    with col2:
-        st.markdown("### Synopsis")
-        st.write(book.get("Description", "No description available."))
+        with col1:
+            st.image(book['image'], width=160)
 
-        st.markdown(f"**Authors:** {book.get('Author', 'N/A')}")
-        st.markdown(f"**Pages:** {book.get('Pages', 'N/A')}")
-        st.markdown(f"**Published:** {book.get('Year', book.get('Published', 'N/A'))}")
-        st.markdown(f"**Language:** {book.get('Language', 'N/A')}")
-        st.markdown(f"**Publisher:** {book.get('Publisher', 'N/A')}")
-        st.markdown(f"**Subjects:** {book.get('Subjects', 'N/A')}")
+        with col2:
+            st.markdown("### Synopsis")
+            st.write(book.get("Description", "No description available."))
 
-        if book.get('link'):
-            st.markdown(f"""<a href="{book['link']}" target="_blank">
-                            <button class="grey-button">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
+            st.markdown(f"**Authors:** {book.get('Author', 'N/A')}")
+            st.markdown(f"**Pages:** {book.get('Pages', 'N/A')}")
+            st.markdown(f"**Published:** {book.get('Year', book.get('Published', 'N/A'))}")
+            st.markdown(f"**Language:** {book.get('Language', 'N/A')}")
+            st.markdown(f"**Publisher:** {book.get('Publisher', 'N/A')}")
+            st.markdown(f"**Subjects:** {book.get('Subjects', 'N/A')}")
 
-    if st.button("❤️ Add to Favorites", key=f"modal_fav_{book['i']}"):
-        if book['i'] not in st.session_state.favorites:
-            st.session_state.favorites.append(book['i'])
+            if book.get('link'):
+                st.markdown(f"""<a href="{book['link']}" target="_blank">
+                                <button class="grey-button">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
 
-    if st.button("⬅️ Back to Recommendations"):
-        go_to_home()
+        if st.button("❤️ Add to Favorites", key=f"fav_detail_{book['i']}"):
+            if book['i'] not in st.session_state.favorites:
+                st.session_state.favorites.append(book['i'])
+
+    st.markdown("---")
+    st.button("⬅️ Back to Recommendations", on_click=go_to_home)
