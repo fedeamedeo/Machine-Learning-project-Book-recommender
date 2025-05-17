@@ -71,6 +71,8 @@ if "favorites" not in st.session_state:
     st.session_state.favorites = []
 if "expanded_book_id" not in st.session_state:
     st.session_state.expanded_book_id = None
+if "recommended_book_ids" not in st.session_state:
+    st.session_state.recommended_book_ids = []
 
 # ---------- DATA LOADING ----------
 @st.cache_data
