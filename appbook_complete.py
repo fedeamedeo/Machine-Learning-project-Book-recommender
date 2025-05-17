@@ -79,7 +79,7 @@ user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 
 # ---------- RENDER BOOKS VERTICALLY ----------
 def render_books_vertical(df, prefix, allow_expansion=True):
-    rows = [df.iloc[i:i+2] for i in range(0, len(df), 2)]
+    rows = [df.iloc[i:i+3] for i in range(0, len(df), 3)]
     for row_group in rows:
         cols = st.columns(len(row_group))
         for col, (_, row) in zip(cols, row_group.iterrows()):
