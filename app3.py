@@ -86,12 +86,10 @@ def load_data():
 
 recs_df, interactions_df, merged_df = load_data()
 
-# ---------- TOGGLE VISIBILITY ----------
-st.sidebar.markdown("---")
+# ---------- SIDEBAR ----------
+st.sidebar.title("Book Recommendations")
 show_recs = st.sidebar.checkbox("📚 Show Recommendations", value=True)
 show_selected = st.sidebar.checkbox("📖 Show Selected Book", value=True)
-
-# ---------- SIDEBAR ----------
 st.sidebar.title("Book Recommendations")
 st.sidebar.image("https://media.istockphoto.com/id/944631208/photo/education-concept-with-book-in-library.jpg?s=612x612&w=0&k=20&c=uJF-uOU5MRR-iwXqJEPAdXeaH-VJ-nqt6TdKUpEdEkk=", width=300)
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
