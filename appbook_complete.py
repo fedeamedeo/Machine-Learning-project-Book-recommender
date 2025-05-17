@@ -58,6 +58,8 @@ if "favorites" not in st.session_state:
     st.session_state.favorites = []
 if "expanded_book_id" not in st.session_state:
     st.session_state.expanded_book_id = None
+if "expanded_sidebar_book" not in st.session_state:
+    st.session_state.expanded_sidebar_book = False
 
 # ---------- DATA LOADING ----------
 @st.cache_data
@@ -143,6 +145,7 @@ if st.sidebar.button("Show Recommendations"):
 book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📖 Pick a Book Title", sorted(book_titles))
 if st.sidebar.button("View Book Details"):
+    st.session_state.expanded_sidebar_book = not st.session_state.expanded_sidebar_book
     book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
     st.subheader("📘 Book Details")
     st.image(book_info['image'], width=150)
@@ -154,6 +157,23 @@ if st.sidebar.button("View Book Details"):
     if st.button("❤️ Save to Favorites"):
         if book_info['i'] not in st.session_state.favorites:
             st.session_state.favorites.append(book_info['i'])
+
+if st.session_state.expanded_sidebar_book:
+    with st.expander("📖 Book Details", expanded=True):
+        st.image(book_info['image'], width=160)
+        st.markdown("### Details")
+        st.write(book_info.get("Description") or book_info.get("synopsis", "No description available."))
+        st.markdown(f"**Author:** {book_info.get('Author', 'Unknown')}")
+        st.markdown(f"**Pages:** {book_info.get('Pages', book_info.get('pages', 'N/A'))}")
+        st.markdown(f"**Published:** {book_info.get('Year', book_info.get('date_published', 'N/A'))}")
+        st.markdown(f"**Language:** {book_info.get('language', book_info.get('language', 'N/A'))}")
+        st.markdown(f"**Publisher:** {book_info.get('publisher', book_info.get('Publisher', 'N/A'))}")
+        st.markdown(f"**Subjects:** {book_info.get('Subjects', 'N/A')}")
+        if book_info.get('link'):
+            st.markdown(f"""<a href=\"{book_info['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
+        if st.button("❤️ Add to Favorites", key=f"sidebar_modal_fav_{book_info['i']}"):
+            if book_info['i'] not in st.session_state.favorites:
+                st.session_state.favorites.append(book_info['i'])
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
@@ -174,7 +194,6 @@ if st.session_state.favorites:
     if st.button("🗑️ Clear Favorites"):
         st.session_state.favorites = []
     render_books_vertical(fav_books, "fav")
-
 
 # ---------- MOST POPULAR ----------
 st.header("🔥 Most Popular Books")
