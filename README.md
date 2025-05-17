@@ -4,9 +4,11 @@ This project aims to develop a personalized book recommender system. Using five 
 
 ## Project Workflow:
 
-- Data Exploration: The project begins with loading the user-book interactions dataset and the book metadata. Various attributes such as book title, authors, average rating, language, and publication date are examined to gain insights into the data structure and distribution.
+**Data Exploration** 
+The project begins with loading the user-book interactions dataset and the book metadata. Various attributes such as book title, authors, average rating, language, and publication date are examined to gain insights into the data structure and distribution.
 
-- Data Cleaning: This stage mainly involves handling duplicate entries, and ensuring consistency in column names and data types.
+**Data Cleaning** 
+This stage mainly involves handling duplicate entries, and ensuring consistency in column names and data types.
 
 - Exploratory Data Analysis (EDA): EDA techniques such as visualization and aggregation are employed to understand the distribution and relationships within the dataset. Analysis includes exploring book ratings, language distribution, top publishers, and authors based on various metrics.
 
