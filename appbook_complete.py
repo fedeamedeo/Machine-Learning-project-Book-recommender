@@ -180,3 +180,4 @@ st.header("🔥 Most Popular Books")
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = merged_df[merged_df['i'].isin(popular_ids)]
 render_books_vertical(popular_books, "pop")
+
