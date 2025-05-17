@@ -109,7 +109,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
     rows = [df.iloc[i:i+3] for i in range(0, len(df), 3)]
     for row_group in rows:
         if not row_group.empty:
-            cols = st.columns(len(row_group))
+            cols = st.columns(len(row_group), gap="small")
         for col, (_, row) in zip(cols, row_group.iterrows()):
             with col:
                 st.markdown('<div class="book-card">', unsafe_allow_html=True)
