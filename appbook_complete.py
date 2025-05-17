@@ -79,52 +79,55 @@ user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 
 # ---------- RENDER BOOKS VERTICALLY ----------
 def render_books_vertical(df, prefix, always_expanded=False):
-    for _, row in df.iterrows():
-        with st.container():
-            st.markdown('<div class="book-card">', unsafe_allow_html=True)
-            st.markdown('<div class="book-content">', unsafe_allow_html=True)
-            st.image(row['image'], width=110)
-            st.markdown('<div class="book-info">', unsafe_allow_html=True)
-            st.markdown(f"**{row['title']}**")
+    rows = [df.iloc[i:i+2] for i in range(0, len(df), 2)]
+    for row_group in rows:
+        cols = st.columns(len(row_group))
+        for col, (_, row) in zip(cols, row_group.iterrows()):
+            with col:
+                st.markdown('<div class="book-card">', unsafe_allow_html=True)
+                st.markdown('<div class="book-content">', unsafe_allow_html=True)
+                st.image(row['image'], width=110)
+                st.markdown('<div class="book-info">', unsafe_allow_html=True)
+                st.markdown(f"**{row['title']}**")
 
-            description = row.get("Description") or row.get("synopsis", "No description available.")
-            if isinstance(description, str) and len(description) > 120:
-                st.caption(description[:120] + "...")
-            else:
-                st.caption(description)
+                description = row.get("Description") or row.get("synopsis", "No description available.")
+                if isinstance(description, str) and len(description) > 120:
+                    st.caption(description[:120] + "...")
+                else:
+                    st.caption(description)
 
-            if not always_expanded:
-                st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
-                        if row['i'] not in st.session_state.favorites:
-                            st.session_state.favorites.append(row['i'])
-                with col2:
-                    if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
-                        if st.session_state.expanded_book_id == row['i']:
-                            st.session_state.expanded_book_id = None
-                        else:
-                            st.session_state.expanded_book_id = row['i']
-                st.markdown('</div>', unsafe_allow_html=True)
-                st.markdown('</div></div>', unsafe_allow_html=True)
+                if not always_expanded:
+                    st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
+                            if row['i'] not in st.session_state.favorites:
+                                st.session_state.favorites.append(row['i'])
+                    with col2:
+                        if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
+                            if st.session_state.expanded_book_id == row['i']:
+                                st.session_state.expanded_book_id = None
+                            else:
+                                st.session_state.expanded_book_id = row['i']
+                    st.markdown('</div>', unsafe_allow_html=True)
+                    st.markdown('</div></div>', unsafe_allow_html=True)
 
-            if always_expanded or st.session_state.expanded_book_id == row['i']:
-                with st.expander("📓 Book Details", expanded=True):
-                    st.image(row['image'], width=160)
-                    st.markdown("### Details")
-                    st.write(description)
-                    st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
-                    st.markdown(f"**Pages:** {row.get('Pages', row.get('pages', 'N/A'))}")
-                    st.markdown(f"**Published:** {row.get('Year', row.get('date_published', 'N/A'))}")
-                    st.markdown(f"**Language:** {row.get('language', row.get('Language', 'N/A'))}")
-                    st.markdown(f"**Publisher:** {row.get('publisher', row.get('Publisher', 'N/A'))}")
-                    st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
-                    if row.get('link'):
-                        st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
-                    if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
-                        if row['i'] not in st.session_state.favorites:
-                            st.session_state.favorites.append(row['i'])
+                if always_expanded or st.session_state.expanded_book_id == row['i']:
+                    with st.expander("📓 Book Details", expanded=True):
+                        st.image(row['image'], width=160)
+                        st.markdown("### Details")
+                        st.write(description)
+                        st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
+                        st.markdown(f"**Pages:** {row.get('Pages', row.get('pages', 'N/A'))}")
+                        st.markdown(f"**Published:** {row.get('Year', row.get('date_published', 'N/A'))}")
+                        st.markdown(f"**Language:** {row.get('language', row.get('Language', 'N/A'))}")
+                        st.markdown(f"**Publisher:** {row.get('publisher', row.get('Publisher', 'N/A'))}")
+                        st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
+                        if row.get('link'):
+                            st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
+                        if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
+                            if row['i'] not in st.session_state.favorites:
+                                st.session_state.favorites.append(row['i'])
 
 # ---------- RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations"):
