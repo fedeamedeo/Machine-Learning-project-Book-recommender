@@ -86,7 +86,12 @@ def render_books_vertical(df, prefix, allow_expansion=True):
             with col:
                 st.markdown('<div class="book-card">', unsafe_allow_html=True)
                 st.markdown('<div class="book-content">', unsafe_allow_html=True)
-                st.image(row['image'], width=110)
+                image_url = row.get('image')
+                if isinstance(image_url, str) and image_url.startswith("http"):
+                    st.image(image_url, width=110)
+                else:
+                    st.image("https://via.placeholder.com/110x160?text=No+Cover", width=110)
+
                 st.markdown('<div class="book-info">', unsafe_allow_html=True)
                 st.markdown(f"**{row['title']}**")
 
@@ -114,7 +119,12 @@ def render_books_vertical(df, prefix, allow_expansion=True):
 
                 if allow_expansion and st.session_state.expanded_book_id == row['i']:
                     with st.expander("📓 Book Details", expanded=True):
-                        st.image(row['image'], width=160)
+                        image_url = row.get('image')
+                        if isinstance(image_url, str) and image_url.startswith("http"):
+                            st.image(image_url, width=160)
+                        else:
+                            st.image("https://via.placeholder.com/160x240?text=No+Cover", width=160)
+
                         st.markdown("### Details")
                         st.write(description)
                         st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
