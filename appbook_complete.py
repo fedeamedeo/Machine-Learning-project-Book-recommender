@@ -19,15 +19,26 @@ st.markdown("""
             background-color: #d5d5d5 !important;
         }
         .book-card {
-            min-height: 260px;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: all 0.3s ease-in-out;
-            margin-bottom: 0.5rem;
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            transition: box-shadow 0.3s ease-in-out;
+            margin-bottom: 1rem;
+            align-items: flex-start;
+            background-color: #ffffff;
         }
         .book-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        .book-info {
+            flex-grow: 1;
+        }
+        .book-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
         }
         .block-container > div:has(.element-container:empty) {
             display: none;
@@ -64,7 +75,8 @@ def render_books_vertical(df, prefix):
     for _, row in df.iterrows():
         with st.container():
             st.markdown('<div class="book-card">', unsafe_allow_html=True)
-            st.image(row['image'], width=100)
+            st.image(row['image'], width=110)
+            st.markdown('<div class="book-info">', unsafe_allow_html=True)
             st.markdown(f"**{row['Title']}**")
             st.caption(row.get('Author', 'Unknown'))
             if isinstance(row.get('Subjects'), str):
@@ -78,6 +90,7 @@ def render_books_vertical(df, prefix):
             else:
                 st.caption(description)
 
+            st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
             col1, col2 = st.columns(2)
             with col1:
                 if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
@@ -89,6 +102,7 @@ def render_books_vertical(df, prefix):
                         st.session_state.expanded_book_id = None
                     else:
                         st.session_state.expanded_book_id = row['i']
+            st.markdown('</div>', unsafe_allow_html=True)
 
             if st.session_state.expanded_book_id == row['i']:
                 with st.expander("📖 Book Details", expanded=True):
@@ -106,7 +120,7 @@ def render_books_vertical(df, prefix):
                     if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
                         if row['i'] not in st.session_state.favorites:
                             st.session_state.favorites.append(row['i'])
-            st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown('</div></div>', unsafe_allow_html=True)
 
 # ---------- RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations"):
