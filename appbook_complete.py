@@ -92,11 +92,11 @@ def render_books_vertical(df, prefix):
             count = interactions_df[interactions_df['i'] == row['i']].shape[0]
             st.caption(f"👥 {count} visualizations")
 
-            #description = row.get("Description") or row.get("synopsis", "No description available.")
-            #if len(description) > 120:
-                #st.caption(description[:120] + "...")
-            #else:
-                #st.caption(description)
+            description = row.get("Description") or row.get("synopsis", "No description available.")
+            if len(description) > 120:
+                st.caption(description[:120] + "...")
+            else:
+                st.caption(description)
 
             st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
             col1, col2 = st.columns(2)
