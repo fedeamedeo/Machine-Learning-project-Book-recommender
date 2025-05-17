@@ -123,7 +123,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
         for col, (_, row) in zip(cols, row_group.iterrows()):
             with col:
                 st.markdown('<div class="book-section" style="padding: 1rem; background-color: #ffffff; border: 1px solid #ddd; border-radius: 12px; margin-bottom: 1rem; min-height: 420px; display: flex; flex-direction: column; justify-content: space-between;">', unsafe_allow_html=True)
-                st.markdown('<div class="book-card">', unsafe_allow_html=True)
+                st.markdown('<div class="book-card" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">', unsafe_allow_html=True)
                 author = row.get('Author', 'Unknown')
                 genre = row.get('Subjects', '').split(',')[0] if row.get('Subjects') else 'N/A'
                 st.caption(f"{author} — {genre}")
@@ -147,6 +147,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                             st.session_state.expanded_book_id = None if st.session_state.expanded_book_id == row['i'] else row['i']
                     st.markdown('</div>', unsafe_allow_html=True)
                     st.markdown('</div></div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
                 if allow_expansion and st.session_state.expanded_book_id == row['i']:
                     with st.expander("📓 Book Details", expanded=True):
                         st.image(image_url if isinstance(image_url, str) and image_url.startswith("http")
