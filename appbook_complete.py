@@ -92,7 +92,7 @@ def render_books_vertical(df, prefix):
             count = interactions_df[interactions_df['i'] == row['i']].shape[0]
             st.caption(f"👥 {count} visualizations")
 
-            description = row.get("Description", "No description available.")
+            description = row.get("Description") or row.get("synopsis", "No description available.")
             if len(description) > 120:
                 st.caption(description[:120] + "...")
             else:
@@ -118,11 +118,11 @@ def render_books_vertical(df, prefix):
                     st.image(row['image'], width=160)
                     st.markdown("### Details")
                     st.write(description)
-                    st.markdown(f"**Author:** {row.get('Author', 'N/A')}")
-                    st.markdown(f"**Pages:** {row.get('Pages', 'N/A')}")
+                    st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
+                    st.markdown(f"**Pages:** {row.get('Pages', row.get('dimensions', 'N/A'))}")
                     st.markdown(f"**Published:** {row.get('Year', row.get('Published', 'N/A'))}")
-                    st.markdown(f"**Language:** {row.get('Language', 'N/A')}")
-                    st.markdown(f"**Publisher:** {row.get('Publisher', 'N/A')}")
+                    st.markdown(f"**Language:** {row.get('language', row.get('Language', 'N/A'))}")
+                    st.markdown(f"**Publisher:** {row.get('publisher', row.get('Publisher', 'N/A'))}")
                     st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
                     if row.get('link'):
                         st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
@@ -180,4 +180,3 @@ st.header("🔥 Most Popular Books")
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = merged_df[merged_df['i'].isin(popular_ids)]
 render_books_vertical(popular_books, "pop")
-
