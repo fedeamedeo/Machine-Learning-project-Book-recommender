@@ -86,11 +86,11 @@ def render_books_vertical(df, prefix):
             st.image(row['image'], width=110)
             st.markdown('<div class="book-info">', unsafe_allow_html=True)
             st.markdown(f"**{row['title']}**")
-            st.caption(row.get('Author', 'Unknown'))
-            if isinstance(row.get('Subjects'), str):
-                st.caption(row['Subjects'].split(',')[0])
-            count = interactions_df[interactions_df['i'] == row['i']].shape[0]
-            st.caption(f"👥 {count} visualizations")
+            #st.caption(row.get('Author', 'Unknown'))
+            #if isinstance(row.get('Subjects'), str):
+                #st.caption(row['Subjects'].split(',')[0])
+            #count = interactions_df[interactions_df['i'] == row['i']].shape[0]
+            #st.caption(f"👥 {count} visualizations")
 
             description = row.get("Description") or row.get("synopsis", "No description available.")
             if len(description) > 120:
