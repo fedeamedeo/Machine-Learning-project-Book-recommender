@@ -67,6 +67,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------- SESSION STATE ----------
+if "selected_book_info" not in st.session_state:
+    st.session_state.selected_book_info = None
 if "favorites" not in st.session_state:
     st.session_state.favorites = []
 if "expanded_book_id" not in st.session_state:
