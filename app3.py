@@ -142,13 +142,15 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                                 st.session_state.favorites.append(row['i'])
 
 # ---------- VIEW RECOMMENDATIONS ----------
-if st.sidebar.button("Show Recommendations"):
+if st.sidebar.button("Show Recommendations", key="show_recs_button"):
     user_row = recs_df[recs_df['user_id'] == user_id]
     if not user_row.empty:
-        book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
-        recommended_books = merged_df[merged_df['i'].isin(book_ids)]
-        st.subheader("📖 Top Book Picks for You")
-        render_books_vertical(recommended_books, "rec")
+        st.session_state.recommended_book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
+
+if st.session_state.recommended_book_ids:
+    recommended_books = merged_df[merged_df['i'].isin(st.session_state.recommended_book_ids)]
+    st.subheader("📖 Top Book Picks for You")
+    render_books_vertical(recommended_books, "rec", allow_expansion=True)
 
 # ---------- VIEW SELECTED BOOK ----------
 if st.sidebar.button("View Book Details"):
