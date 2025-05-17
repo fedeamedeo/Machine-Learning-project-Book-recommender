@@ -81,3 +81,4 @@ if st.sidebar.button("Show Recommendations"):
                     with col2:
                         if st.button("More Info", key=f"info_{row['i']}"):
                             show_book_details_dialog(row)
+
