@@ -75,7 +75,6 @@ if "favorites" not in st.session_state:
     st.session_state.favorites = []
 if "expanded_book_id" not in st.session_state:
     st.session_state.expanded_book_id = None
-
 # ---------- DATA LOADING ----------
 @st.cache_data
 def load_data():
