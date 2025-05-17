@@ -62,27 +62,24 @@ if st.sidebar.button("Show Recommendations"):
                         if st.button("More Info", key=f"info_{row['i']}"):
                             st.session_state.expanded_book_id = row['i']
 
-                # ---------- Expandable Book Details (simulated modal) ----------
-                if st.session_state.expanded_book_id == row['i']:
-                    with st.expander("📖 Book Details", expanded=True):
-                        st.image(row['image'], width=160)
-                        st.markdown("### Details")
-                        st.write(row.get("Description", "No description available."))
-                        st.markdown(f"**Author:** {row.get('Author', 'N/A')}")
-                        st.markdown(f"**Pages:** {row.get('Pages', 'N/A')}")
-                        st.markdown(f"**Published:** {row.get('Year', row.get('Published', 'N/A'))}")
-                        st.markdown(f"**Language:** {row.get('Language', 'N/A')}")
-                        st.markdown(f"**Publisher:** {row.get('Publisher', 'N/A')}")
-                        st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
+# ---------- BOOK PICKER ----------
+book_titles = merged_df['title_long'].dropna().unique()
+selected_book = st.sidebar.selectbox("📖 Pick a Book Title", sorted(book_titles))
+if st.sidebar.button("View Book Details"):
+    book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
 
-                        if row.get('link'):
-                            st.markdown(f"""<a href="{row['link']}" target="_blank">
-                                            <button class="grey-button">🔗 Visit Link</button></a>""",
-                                        unsafe_allow_html=True)
+    st.subheader("📘 Book Details")
+    st.image(book_info['image'], width=150)
+    st.markdown(f"**{book_info['title_long']}**")
+    st.caption(book_info['Author'])
+    st.caption(f"👥 {interactions_df[interactions_df['i'] == book_info['i']].shape[0]} visualizations")
 
-                        if st.button("❤️ Add to Favorites", key=f"modal_fav_{row['i']}"):
-                            if row['i'] not in st.session_state.favorites:
-                                st.session_state.favorites.append(row['i'])
+    if book_info.get('Subjects'):
+        st.caption(book_info['Subjects'].split(',')[0])
 
-                        if st.button("❌ Close", key=f"close_{row['i']}"):
-                            st.session_state.expanded_book_id = None
+    #if book_info.get('link'):
+        #st.markdown(f"[🔗 Open Link]({book_info['link']})", unsafe_allow_html=True)
+
+    if st.button("❤️ Save to Favorites"):
+        if book_info['i'] not in st.session_state.favorites:
+            st.session_state.favorites.append(book_info['i'])
