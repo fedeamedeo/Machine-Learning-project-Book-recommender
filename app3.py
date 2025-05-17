@@ -86,6 +86,11 @@ def load_data():
 
 recs_df, interactions_df, merged_df = load_data()
 
+# ---------- TOGGLE VISIBILITY ----------
+st.sidebar.markdown("---")
+show_recs = st.sidebar.checkbox("📚 Show Recommendations", value=True)
+show_selected = st.sidebar.checkbox("📖 Show Selected Book", value=True)
+
 # ---------- SIDEBAR ----------
 st.sidebar.title("Book Recommendations")
 st.sidebar.image("https://media.istockphoto.com/id/944631208/photo/education-concept-with-book-in-library.jpg?s=612x612&w=0&k=20&c=uJF-uOU5MRR-iwXqJEPAdXeaH-VJ-nqt6TdKUpEdEkk=", width=300)
@@ -153,7 +158,7 @@ if st.sidebar.button("Show Recommendations", key="show_recs_button"):
     if not user_row.empty:
         st.session_state.recommended_book_ids = list(map(int, user_row.iloc[0]['recommendation'].split()))[:10]
 
-if st.session_state.recommended_book_ids:
+if st.session_state.recommended_book_ids and show_recs:
     recommended_books = merged_df[merged_df['i'].isin(st.session_state.recommended_book_ids)]
     st.subheader("📖 Top Book Picks for You")
     render_books_vertical(recommended_books, "rec", allow_expansion=True)
@@ -162,10 +167,9 @@ if st.session_state.recommended_book_ids:
 if st.sidebar.button("View Book Details", key="view_details_button"):
     st.session_state.selected_book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
 
-if st.session_state.selected_book_info is not None:
+if st.session_state.selected_book_info is not None and show_selected:
     st.markdown(f"### 📖 This is the book you chose: *{st.session_state.selected_book_info['title']}*")
     render_books_vertical(pd.DataFrame([st.session_state.selected_book_info]), "picker", allow_expansion=True)
-
 
 # ---------- SEARCH ----------
 st.title("🔍 Search the Book Database")
