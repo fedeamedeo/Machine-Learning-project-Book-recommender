@@ -113,7 +113,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                 if prefix == "rec":
                     pass  # skip caption for Top Picks
                 else:
-                    st.caption(description[:120] + "..." if isinstance(description, str) and len(description) > 120 else description)
+                     st.caption(description[:120] + "..." if isinstance(description, str) and len(description) > 120 else description)
 
                 if allow_expansion:
                     st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
