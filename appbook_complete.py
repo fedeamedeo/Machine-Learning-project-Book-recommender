@@ -120,8 +120,8 @@ def render_books_vertical(df, prefix):
                     st.write(description)
                     st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
                     st.markdown(f"**Pages:** {row.get('Pages', row.get('pages', 'N/A'))}")
-                    st.markdown(f"**Published:** {row.get('Year', row.get('Published', 'N/A'))}")
-                    st.markdown(f"**Language:** {row.get('language', row.get('Language', 'N/A'))}")
+                    st.markdown(f"**Published:** {row.get('Year', row.get('date_published', 'N/A'))}")
+                    st.markdown(f"**Language:** {row.get('language', row.get('language', 'N/A'))}")
                     st.markdown(f"**Publisher:** {row.get('publisher', row.get('Publisher', 'N/A'))}")
                     st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
                     if row.get('link'):
