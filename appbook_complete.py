@@ -25,12 +25,19 @@ st.markdown("""
             border-radius: 12px;
             box-shadow: 0 4px 14px rgba(0,0,0,0.06);
             transition: box-shadow 0.3s ease-in-out;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             align-items: flex-start;
             background-color: #ffffff;
+            flex-direction: column;
         }
         .book-card:hover {
             box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        .book-content {
+            display: flex;
+            gap: 1.5rem;
+            width: 100%;
+            align-items: flex-start;
         }
         .book-info {
             flex-grow: 1;
@@ -75,6 +82,7 @@ def render_books_vertical(df, prefix):
     for _, row in df.iterrows():
         with st.container():
             st.markdown('<div class="book-card">', unsafe_allow_html=True)
+            st.markdown('<div class="book-content">', unsafe_allow_html=True)
             st.image(row['image'], width=110)
             st.markdown('<div class="book-info">', unsafe_allow_html=True)
             st.markdown(f"**{row['Title']}**")
@@ -103,6 +111,7 @@ def render_books_vertical(df, prefix):
                     else:
                         st.session_state.expanded_book_id = row['i']
             st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown('</div></div>', unsafe_allow_html=True)
 
             if st.session_state.expanded_book_id == row['i']:
                 with st.expander("📖 Book Details", expanded=True):
@@ -120,7 +129,6 @@ def render_books_vertical(df, prefix):
                     if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
                         if row['i'] not in st.session_state.favorites:
                             st.session_state.favorites.append(row['i'])
-            st.markdown('</div></div>', unsafe_allow_html=True)
 
 # ---------- RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations"):
