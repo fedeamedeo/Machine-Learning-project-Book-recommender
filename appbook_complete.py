@@ -174,3 +174,26 @@ if st.session_state.favorites:
                     if st.button("❤️", key=f"fav_{row['i']}"):
                         if row['i'] not in st.session_state.favorites:
                             st.session_state.favorites.append(row['i'])
+
+# ---------- MOST POPULAR ----------
+st.header("🔥 Most Popular Books")
+popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
+popular_books = merged_df[merged_df['i'].isin(popular_ids)]
+cols = st.columns(5)
+for i, (_, row) in enumerate(popular_books.iterrows()):
+    with cols[i % 5]:
+        with st.container(border=True):
+            st.image(row['image'], width=120)
+            st.markdown(f"**{row['Title']}**")
+            st.caption(row['Author'])
+            if row.get('Subjects'):
+                st.caption(row['Subjects'].split(',')[0])
+            st.caption(f"👥 {interactions_df[interactions_df['i'] == row['i']].shape[0]} visualizations")
+            col1, col2 = st.columns(2)
+            with col1:
+                if row.get('link'):
+                    st.markdown(f"""<a href="{row['link']}" target="_blank"><button class="grey-button" style="width: 100%">🔗</button></a>""", unsafe_allow_html=True)
+            with col2:
+                if st.button("❤️", key=f"pop_{row['i']}"):
+                    if row['i'] not in st.session_state.favorites:
+                        st.session_state.favorites.append(row['i'])
