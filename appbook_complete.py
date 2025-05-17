@@ -81,7 +81,7 @@ st.markdown("""
 if "favorites" not in st.session_state:
     st.session_state.favorites = []
 if "expanded_book_id" not in st.session_state:
-    st.session_state.expanded_book_id = None
+    st.session_state.expanded_book_id = {}
 if "expanded_sidebar_book_id" not in st.session_state:
     st.session_state.expanded_sidebar_book_id = None
 
@@ -126,11 +126,11 @@ def render_books_vertical(df, prefix):
                         st.session_state.favorites.append(row['i'])
             with col2:
                 if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
-                    st.session_state.expanded_book_id = row['i']
+                    st.session_state.expanded_book_id[prefix] = row['i']
             st.markdown('</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
 
-            if st.session_state.expanded_book_id == row['i']:
+            if st.session_state.expanded_book_id.get(prefix) == row['i']:
                 st.markdown('<div class="overlay"></div>', unsafe_allow_html=True)
                 st.markdown('<div class="modal-box">', unsafe_allow_html=True)
                 st.image(row['image'], width=160)
@@ -146,7 +146,7 @@ def render_books_vertical(df, prefix):
                 if row.get('link'):
                     st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
                 if st.button("❌ Close", key=f"{prefix}_close_{row['i']}"):
-                    st.session_state.expanded_book_id = None
+                    st.session_state.expanded_book_id[prefix] = None
                 st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- RECOMMENDATIONS ----------
