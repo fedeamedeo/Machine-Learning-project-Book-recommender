@@ -82,7 +82,7 @@ def load_data():
 recs_df, interactions_df, merged_df = load_data()
 
 # ---------- SIDEBAR ----------
-st.sidebar.title("Book Recommendations")
+st.sidebar.title("@MyBib.io")
 show_recs = st.sidebar.checkbox("📚 Show Recommendations", value=True)
 show_selected = st.sidebar.checkbox("📜 Show Selected Book", value=True)
 st.sidebar.title("Book Recommendations")
