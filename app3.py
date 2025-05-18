@@ -102,7 +102,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                         st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
                         col1, col2 = st.columns(2)
                         with col1:
-                            if st.button("❤️Save to Favourite", key=f"{prefix}_fav_{row['i']}"):
+                            if st.button("⭐ Save", key=f"{prefix}_fav_{row['i']}"):
                                 if row['i'] not in st.session_state.favorites:
                                     st.session_state.favorites.append(row['i'])
                         with col2:
@@ -125,7 +125,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                             st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
                             if row.get('link'):
                                 st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
-                            if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
+                            if st.button("⭐ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
                                 if row['i'] not in st.session_state.favorites:
                                     st.session_state.favorites.append(row['i'])
 
