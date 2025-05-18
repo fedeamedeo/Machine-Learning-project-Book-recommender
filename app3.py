@@ -19,19 +19,22 @@ st.markdown("""
         background-color: #a0a0a0 !important;
     }
     .book-content {
-        margin: auto;
-        justify-content: space-between;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 1rem;
-        width: 100%;
+        justify-content: space-between;
+        height: 100%;
+        padding: 1rem;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     .book-info {
         font-size: 1rem;
         font-weight: 600;
         margin-top: 0.5rem;
         color: #333;
+        text-align: center;
     }
     .book-buttons {
         display: flex;
@@ -100,6 +103,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
             cols = st.columns(len(row_group), gap="small")
             for col, (_, row) in zip(cols, row_group.iterrows()):
                 with col:
+                    st.markdown('<div class="book-content">', unsafe_allow_html=True)
                     st.markdown(f"<div class='book-info'>{row['title']}</div>", unsafe_allow_html=True)
                     image_url = row.get('image')
                     st.image(image_url if isinstance(image_url, str) and image_url.startswith("http")
@@ -135,6 +139,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                             if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
                                 if row['i'] not in st.session_state.favorites:
                                     st.session_state.favorites.append(row['i'])
+                    st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- VIEW RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations", key="show_recs_button"):
