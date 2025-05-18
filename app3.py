@@ -18,17 +18,9 @@ st.markdown("""
     .grey-button:hover {
         background-color: #d5d5d5 !important;
     }
-    .book-card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 1.5rem;
-        border-radius: 20px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        margin-bottom: 1.5rem;
-        background-color: #fdfdfd;
-        transition: transform 0.2s ease;
+    .book-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     }
     """, unsafe_allow_html=True)
 
