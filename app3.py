@@ -192,5 +192,5 @@ for genre in genres:
         with st.container():
             st.markdown(f"<div style='background-color:#f8f8f8; padding:1rem 1.5rem; border-radius:10px;'>", unsafe_allow_html=True)
             st.subheader(f"📚 {genre.title()}")
-            render_books_vertical(genre_books.head(6), prefix=genre.lower().replace(" ", "_"))
+            render_books_vertical(genre_books.head(8), prefix=genre.lower().replace(" ", "_"))
             st.markdown("</div>", unsafe_allow_html=True)
