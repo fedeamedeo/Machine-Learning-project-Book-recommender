@@ -81,6 +81,7 @@ st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book 
 st.sidebar.markdown("Select your Personal Library User ID to see book recommendations just for you.")
 user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 
+
 # ---------- BOOK PICKER ----------
 book_titles = merged_df['title_long'].dropna().unique()
 selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_titles))
