@@ -117,7 +117,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                                      else "https://via.placeholder.com/180x270?text=No+Cover", width=180)
                             st.markdown("### Details")
                             description = row.get("Description") or row.get("synopsis", "No description available.")
-                            st.write(description)
+                            st.markdown(description, unsafe_allow_html=True)
                             st.markdown(f"**Author:** {row.get('Author', 'Unknown')}")
                             st.markdown(f"**Pages:** {row.get('Pages', row.get('pages', 'N/A'))}")
                             st.markdown(f"**Published:** {row.get('Year', row.get('date_published', 'N/A'))}")
