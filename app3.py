@@ -20,19 +20,12 @@ st.markdown("""
     }
     .book-content {
         margin: auto;
-        min-height: 460px;
-        max-width: 240px;
         justify-content: space-between;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 1rem;
         width: 100%;
-        padding: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        background-color: #fafafa;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
     .book-info {
         font-size: 1rem;
@@ -100,7 +93,6 @@ def render_books_vertical(df, prefix, allow_expansion=True):
             cols = st.columns(len(row_group), gap="small")
             for col, (_, row) in zip(cols, row_group.iterrows()):
                 with col:
-                    st.markdown('<div class="book-content">', unsafe_allow_html=True)
                     st.markdown(f"<div class='book-info'>{row['title']}</div>", unsafe_allow_html=True)
                     image_url = row.get('image')
                     st.image(image_url if isinstance(image_url, str) and image_url.startswith("http")
@@ -117,7 +109,6 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                             if st.button("More Info", key=f"{prefix}_info_{row['i']}"):
                                 st.session_state.expanded_book_id = None if st.session_state.expanded_book_id == row['i'] else row['i']
                         st.markdown('</div>', unsafe_allow_html=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
 
                     if allow_expansion and st.session_state.expanded_book_id == row['i']:
                         with st.expander("📓 Book Details", expanded=True):
