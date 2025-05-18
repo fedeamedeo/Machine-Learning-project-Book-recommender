@@ -48,6 +48,11 @@ st.markdown("""
     .block-container > div:has(.element-container:empty) {
         display: none;
     }
+    .main > div {
+        background-color: #f5f7fa;
+        padding: 1rem;
+        border-radius: 10px;
+    }
     </style>
 """, unsafe_allow_html=True)
 
