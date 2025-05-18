@@ -72,7 +72,7 @@ def load_data():
 recs_df, interactions_df, merged_df = load_data()
 
 # ---------- SIDEBAR ----------
-st.sidebar.title("@MyBib.io")
+st.sidebar.markdown("<h1 style='font-size:40px; color:#333;'>@MyBib.io</h1>", unsafe_allow_html=True)
 show_recs = st.sidebar.checkbox("📚 Show Recommendations", value=True)
 show_selected = st.sidebar.checkbox("📜 Show Selected Book", value=True)
 st.sidebar.title("Book Recommendations")
