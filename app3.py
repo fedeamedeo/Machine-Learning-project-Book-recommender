@@ -8,7 +8,7 @@ st.set_page_config(page_title="\ud83d\udcda Book Recommender", layout="wide", in
 st.markdown("""
     <style>
     .grey-button {
-        background-color: #5a5a5a !important;
+        background-color: #888888 !important;
         color: white !important;
         border: none;
         padding: 0.4rem 0.8rem;
@@ -16,7 +16,7 @@ st.markdown("""
         cursor: pointer;
     }
     .grey-button:hover {
-        background-color: #444 !important;
+        background-color: #666666 !important;
     }
     .book-content {
         margin: auto;
@@ -54,7 +54,7 @@ st.markdown("""
         border-radius: 10px;
     }
     section[data-testid="stSidebar"] {
-        background-color: #444444;
+        background-color: #888888;
     }
     section[data-testid="stSidebar"] * {
         color: white !important;
@@ -68,11 +68,11 @@ st.markdown("""
         color: black;
     }
     .stButton > button {
-        background-color: #5a5a5a;
+        background-color: #888888;
         color: white;
     }
     .stButton > button:hover {
-        background-color: #444;
+        background-color: #666666;
         color: white;
     }
     </style>
