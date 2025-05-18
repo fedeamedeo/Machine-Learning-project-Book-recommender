@@ -18,6 +18,8 @@ st.markdown("""
     .grey-button:hover {
         background-color: #d5d5d5 !important;
     }
+            .grey-button:hover {
+        background-color: #d5d5d5 !important;
     """, unsafe_allow_html=True)
 
 # ---------- SESSION STATE ----------
