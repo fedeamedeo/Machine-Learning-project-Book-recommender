@@ -2,13 +2,13 @@ import streamlit as st
 import pandas as pd
 
 # ---------- CONFIG ----------
-st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="\ud83d\udcda Book Recommender", layout="wide", initial_sidebar_state="expanded")
 
 # ---------- GLOBAL STYLES ----------
 st.markdown("""
     <style>
     .grey-button {
-        background-color: #4a4a4a !important;
+        background-color: #5a5a5a !important;
         color: white !important;
         border: none;
         padding: 0.4rem 0.8rem;
@@ -16,7 +16,7 @@ st.markdown("""
         cursor: pointer;
     }
     .grey-button:hover {
-        background-color: #333 !important;
+        background-color: #444 !important;
     }
     .book-content {
         margin: auto;
@@ -54,25 +54,25 @@ st.markdown("""
         border-radius: 10px;
     }
     section[data-testid="stSidebar"] {
-        background-color: #2f2f2f;
+        background-color: #444444;
     }
     section[data-testid="stSidebar"] * {
         color: white !important;
     }
     .stTextInput > div > input {
-        background-color: #dddddd;
+        background-color: #cccccc;
         color: black;
     }
     .stSelectbox > div > div {
-        background-color: #dddddd;
+        background-color: #cccccc;
         color: black;
     }
     .stButton > button {
-        background-color: #4a4a4a;
+        background-color: #5a5a5a;
         color: white;
     }
     .stButton > button:hover {
-        background-color: #333;
+        background-color: #444;
         color: white;
     }
     </style>
@@ -100,8 +100,8 @@ recs_df, interactions_df, merged_df = load_data()
 
 # ---------- SIDEBAR ----------
 st.sidebar.title("Book Recommendations")
-show_recs = st.sidebar.checkbox("📚 Show Recommendations", value=True)
-show_selected = st.sidebar.checkbox("📜 Show Selected Book", value=True)
+show_recs = st.sidebar.checkbox("\ud83d\udcda Show Recommendations", value=True)
+show_selected = st.sidebar.checkbox("\ud83d\udcdc Show Selected Book", value=True)
 st.sidebar.title("Book Recommendations")
 st.sidebar.image("https://media.istockphoto.com/id/944631208/photo/education-concept-with-book-in-library.jpg?s=612x612&w=0&k=20&c=uJF-uOU5MRR-iwXqJEPAdXeaH-VJ-nqt6TdKUpEdEkk=", width=300)
 st.sidebar.markdown("Welcome to the Book Recommender! Explore personalized book recommendations based on your preferences.")
@@ -110,7 +110,7 @@ user_id = st.sidebar.selectbox("User ID", recs_df['user_id'].unique())
 
 # ---------- BOOK PICKER ----------
 book_titles = merged_df['title_long'].dropna().unique()
-selected_book = st.sidebar.selectbox("📋 Pick a Book Title", sorted(book_titles))
+selected_book = st.sidebar.selectbox("\ud83d\udccb Pick a Book Title", sorted(book_titles))
 
 # ---------- RENDER BOOKS VERTICALLY ----------
 def render_books_vertical(df, prefix, allow_expansion=True):
@@ -129,7 +129,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                         st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
                         col1, col2 = st.columns(2)
                         with col1:
-                            if st.button("❤️", key=f"{prefix}_fav_{row['i']}"):
+                            if st.button("\u2764\ufe0f", key=f"{prefix}_fav_{row['i']}"):
                                 if row['i'] not in st.session_state.favorites:
                                     st.session_state.favorites.append(row['i'])
                         with col2:
@@ -138,7 +138,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                         st.markdown('</div>', unsafe_allow_html=True)
 
                     if allow_expansion and st.session_state.expanded_book_id == row['i']:
-                        with st.expander("📓 Book Details", expanded=True):
+                        with st.expander("\ud83d\udcd3 Book Details", expanded=True):
                             st.image(image_url if isinstance(image_url, str) and image_url.startswith("http")
                                      else "https://via.placeholder.com/180x270?text=No+Cover", width=180)
                             st.markdown("### Details")
@@ -151,8 +151,8 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                             st.markdown(f"**Publisher:** {row.get('publisher', row.get('Publisher', 'N/A'))}")
                             st.markdown(f"**Subjects:** {row.get('Subjects', 'N/A')}")
                             if row.get('link'):
-                                st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">🔗 Visit Link</button></a>""", unsafe_allow_html=True)
-                            if st.button("❤️ Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
+                                st.markdown(f"""<a href=\"{row['link']}\" target=\"_blank\"><button class=\"grey-button\">\ud83d\udd17 Visit Link</button></a>""", unsafe_allow_html=True)
+                            if st.button("\u2764\ufe0f Add to Favorites", key=f"{prefix}_modal_fav_{row['i']}"):
                                 if row['i'] not in st.session_state.favorites:
                                     st.session_state.favorites.append(row['i'])
 
@@ -164,7 +164,7 @@ if st.sidebar.button("Show Recommendations", key="show_recs_button"):
 
 if st.session_state.recommended_book_ids and show_recs:
     recommended_books = merged_df[merged_df['i'].isin(st.session_state.recommended_book_ids)]
-    st.subheader("📖 Top Book Picks for You")
+    st.subheader("\ud83d\udcd6 Top Book Picks for You")
     render_books_vertical(recommended_books, "rec", allow_expansion=True)
 
 # ---------- VIEW SELECTED BOOK ----------
@@ -172,11 +172,11 @@ if st.sidebar.button("View Book Details", key="view_details_button"):
     st.session_state.selected_book_info = merged_df[merged_df['title_long'] == selected_book].iloc[0]
 
 if st.session_state.selected_book_info is not None and show_selected:
-    st.markdown(f"### 📓 This is the book you chose: *{st.session_state.selected_book_info['title']}*")
+    st.markdown(f"### \ud83d\udcd3 This is the book you chose: *{st.session_state.selected_book_info['title']}*")
     render_books_vertical(pd.DataFrame([st.session_state.selected_book_info]), "picker", allow_expansion=True)
 
 # ---------- SEARCH ----------
-st.title("🔍 Search the Book Database")
+st.title("\ud83d\udd0d Search the Book Database")
 search_query = st.text_input("Search for a book by title, author, or subject:")
 if search_query:
     results = merged_df[
@@ -189,26 +189,26 @@ if search_query:
 
 # ---------- FAVORITES ----------
 if st.session_state.favorites:
-    st.subheader("⭐ Your Favorite Books")
+    st.subheader("\u2b50 Your Favorite Books")
     fav_books = merged_df[merged_df['i'].isin(st.session_state.favorites)]
-    if st.button("🗑️ Clear Favorites"):
+    if st.button("\ud83d\uddd1\ufe0f Clear Favorites"):
         st.session_state.favorites = []
     render_books_vertical(fav_books, "fav")
 
 # ---------- MOST POPULAR ----------
-st.header("🔥 Most Popular Books")
+st.header("\ud83d\udd25 Most Popular Books")
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = merged_df[merged_df['i'].isin(popular_ids)]
 render_books_vertical(popular_books, "pop")
 
 # ---------- BOOKS BY GENRE ----------
-st.header("🎨 Books by Genre")
-genres = ["Mangas", "Roman", "Bande dessinées", "Science-fiction", "Thriller", "Fantasy"]
+st.header("\ud83c\udfa8 Books by Genre")
+genres = ["Mangas", "Roman", "Bande dessin\xe9es", "Science-fiction", "Thriller", "Fantasy"]
 for genre in genres:
     genre_books = merged_df[merged_df['Subjects'].fillna("").str.contains(genre, case=False, na=False)]
     if not genre_books.empty:
         with st.container():
             st.markdown(f"<div style='background-color:#f8f8f8; padding:1rem 1.5rem; border-radius:10px;'>", unsafe_allow_html=True)
-            st.subheader(f"📚 {genre.title()}")
+            st.subheader(f"\ud83d\udcda {genre.title()}")
             render_books_vertical(genre_books.head(8), prefix=genre.lower().replace(" ", "_"))
             st.markdown("</div>", unsafe_allow_html=True)
