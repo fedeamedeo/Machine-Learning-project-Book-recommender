@@ -4,7 +4,21 @@ import pandas as pd
 # ---------- CONFIG ----------
 st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_sidebar_state="expanded")
 
-
+# ---------- GLOBAL STYLES ----------
+st.markdown("""
+    <style>
+    .grey-button {
+        background-color: #e0e0e0 !important;
+        color: black !important;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .grey-button:hover {
+        background-color: #d5d5d5 !important;
+    }
+    """, unsafe_allow_html=True)
 
 # ---------- SESSION STATE ----------
 if "selected_book_info" not in st.session_state:
