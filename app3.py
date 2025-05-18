@@ -19,6 +19,9 @@ st.markdown("""
         background-color: #d5d5d5 !important;
     }
     .book-content {
+        min-height: 460px;
+        max-width: 240px;
+        justify-content: space-between;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -178,7 +181,6 @@ st.header("🔥 Most Popular Books")
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = merged_df[merged_df['i'].isin(popular_ids)]
 render_books_vertical(popular_books, "pop")
-
 
 # ---------- BOOKS BY GENRE ----------
 st.header("🎨 Books by Genre")
