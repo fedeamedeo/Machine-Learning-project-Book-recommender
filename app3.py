@@ -129,6 +129,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                                 if row['i'] not in st.session_state.favorites:
                                     st.session_state.favorites.append(row['i'])
 
+
 # ---------- VIEW RECOMMENDATIONS ----------
 if st.sidebar.button("Show Recommendations", key="show_recs_button"):
     user_row = recs_df[recs_df['user_id'] == user_id]
