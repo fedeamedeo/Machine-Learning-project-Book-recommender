@@ -72,7 +72,7 @@ def load_data():
 recs_df, interactions_df, merged_df = load_data()
 
 # ---------- SIDEBAR ----------
-st.sidebar.title("Book Recommendations")
+st.sidebar.title("@MyBib.io")
 show_recs = st.sidebar.checkbox("📚 Show Recommendations", value=True)
 show_selected = st.sidebar.checkbox("📜 Show Selected Book", value=True)
 st.sidebar.title("Book Recommendations")
@@ -170,13 +170,13 @@ if st.session_state.favorites:
     render_books_vertical(fav_books, "fav")
 
 # ---------- MOST POPULAR ----------
-st.header("🔥 Most Popular Books")
+st.header("Most Popular Books")
 popular_ids = interactions_df['i'].value_counts().head(10).index.tolist()
 popular_books = merged_df[merged_df['i'].isin(popular_ids)]
 render_books_vertical(popular_books, "pop")
 
 # ---------- BOOKS BY GENRE ----------
-st.header("🎨 Books by Genre")
+st.header("Books by Genre")
 genres = ["Mangas", "Roman", "Bande dessinées", "Science-fiction", "Thriller", "Fantasy"]
 for genre in genres:
     genre_books = merged_df[merged_df['Subjects'].fillna("").str.contains(genre, case=False, na=False)]
