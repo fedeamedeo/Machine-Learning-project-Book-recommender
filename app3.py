@@ -19,6 +19,7 @@ st.markdown("""
         background-color: #d5d5d5 !important;
     }
     .book-content {
+        margin: auto;
         min-height: 460px;
         max-width: 240px;
         justify-content: space-between;
