@@ -114,7 +114,7 @@ def render_books_vertical(df, prefix, allow_expansion=True):
                          else "https://via.placeholder.com/140x210?text=No+Cover", width=140)
                 # Removed unused book-info block
                 
-                description = row.get("Description") or row.get("synopsis", "No description available.")
+                #description = row.get("Description") or row.get("synopsis", "No description available.")
 
                 if allow_expansion:
                     st.markdown('<div class="book-buttons">', unsafe_allow_html=True)
