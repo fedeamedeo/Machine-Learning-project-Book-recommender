@@ -22,7 +22,7 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center; /* Changed from space-between to center */
         height: 100%;
         padding: 1rem;
         background-color: #ffffff;
