@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # ---------- CONFIG ----------
-st.set_page_config(page_title="📚 Book Recommender", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="📚 @MyBib.io", layout="wide", initial_sidebar_state="expanded")
 
 # ---------- GLOBAL STYLES ----------
 st.markdown("""
@@ -22,24 +22,17 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
         height: 100%;
-        padding: 1.2rem;
+        padding: 1rem;
         background-color: #ffffff;
         border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        margin: 0.5rem;
-        border: 1px solid #f0f0f0;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .book-content:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     .book-info {
         font-size: 1rem;
         font-weight: 600;
-        margin-top: 0.8rem;
+        margin-top: 0.5rem;
         color: #333;
         text-align: center;
     }
@@ -53,7 +46,7 @@ st.markdown("""
         display: none !important;
     }
     .stColumns {
-        margin-bottom: 0.8rem !important;
+        margin-bottom: 0rem !important;
     }
     .block-container > div:has(.element-container:empty) {
         display: none;
@@ -64,14 +57,6 @@ st.markdown("""
     input[type="text"], .stTextInput > div > div > input {
         background-color: #d3d3d3 !important;
         color: black !important;
-    }
-    /* New book category styling */
-    .book-category {
-        margin: 2rem 0;
-        padding: 1.5rem;
-        background-color: #f8f8f8;
-        border-radius: 15px;
-        border-left: 5px solid #4e8cff;
     }
     </style>
 """, unsafe_allow_html=True)
