@@ -18,10 +18,38 @@ st.markdown("""
     .grey-button:hover {
         background-color: #d5d5d5 !important;
     }
-    .book-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    .book-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
     }
+
+    .book-info {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+        color: #333;
+    }
+
+    .book-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .stColumn > div:empty {
+        display: none !important;
+    }
+    .stColumns {
+        margin-bottom: 0rem !important;
+    }
+    .block-container > div:has(.element-container:empty) {
+        display: none;
+    }
+</style>
     """, unsafe_allow_html=True)
 
 # ---------- SESSION STATE ----------
