@@ -15,13 +15,12 @@ This stage mainly involves handling duplicate entries, and ensuring consistency 
 **Exploratory Data Analysis (EDA)**
 
 EDA techniques such as visualization and aggregation are employed to understand the distribution and relationships within the dataset. 
-In the" interactions " dataset, there is a diverse set of users, with the number of interactions per user following a long-tail distribution: most users interact with only a few items, while a few are highly active. Similarly, a small number of books receive a large number of interactions, while most receive few. The most active users (User ID) and most popular books (by title) are visualized, highlighting the top 10 in each category. 
-The analysis with respect to the metadata dataset includes exploring the distribution of the top 15 subject,top publishers, and authors based on various metrics.
-The top publishers are identified, with a bar plot showing the 15 publishers with the most books in the dataset. The top 10 authors by number of items are also visualized.
+In the" interactions " dataset, there is a diverse set of users, with the number of interactions per user following a long-tail distribution: most users interact with only a few items, while a few are highly active. Similarly, a small number of books receive a large number of interactions, while most receive few. The most active users (User ID) and most popular books are visualized, highlighting the top 10 in each category. 
+The analysis with respect to the metadata includes exploring the distribution of the top 15 subjects ,top publishers, and authors based on various metrics.
 
 **Recommender Models**
 
-5 different recommender models are implemented in total. As a baseline, both user-based and item-based collaborative filtering approaches were implemented. Next, a model incorporating embeddings was introduced, followed by a hybrid model that combines predictions from collaborative filtering and embeddings. Finally, a content-based approach using TF-IDF was developed. The model with the highest MAP@10 score was finally selected for the submission. To enhance the metadata datset the open-library.org API was used.
+5 different recommender models are implemented in total. As a baseline, both user-based and item-based collaborative filtering approaches were implemented. Next, a model incorporating embeddings was introduced, followed by a hybrid model that combines predictions from collaborative filtering and embeddings. Finally, a content-based approach using TF-IDF was developed. The model with the highest MAP@10 score was finally selected for the submission. To enhance the metadata, two different APIs were used.
 
 
 ## Description of Recommender Models:
