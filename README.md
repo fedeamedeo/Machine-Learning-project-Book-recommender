@@ -59,7 +59,7 @@ For this reason, we see our analysis as successful (as it worked quite well for 
 
 **Interactive Recommendations**
 
-The project offers an interactive interface using Streamlit and ipywidgets, allowing users to explore recommendations based on publishers, authors, languages, and specific book titles. Recommendations are generated using the K-Nearest Neighbors algorithm, providing users with similar books based on their selections.
+The project offers an interactive interface using Streamlit and ipywidgets, allowing users to explore specific books. In addition to the previous API, we expanded the metadata with a stroger one, that included other variables. This is because we want the USER to have the best experience possible on our app. We therefore added many more details, such as the language, description of the book and above all the Book covers. Recommendations are generated using the K-Nearest Neighbors algorithm, providing users with similar books based on their selections.
 
 By combining machine learning algorithms with interactive visualization, the Book Recommendation System provides a user-friendly platform for discovering new books tailored to individual preferences. Whether users are searching for popular titles from favorite publishers or exploring books by preferred authors, this system offers personalized recommendations to enhance their reading experience.
 
