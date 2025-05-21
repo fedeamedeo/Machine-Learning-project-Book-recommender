@@ -45,9 +45,9 @@ The final performance metrics are reported in the table below.
 
 | Metric        | User-User CF | Item-Item CF | Embeddings | Hybrid Model | TF-IDF  |
 |---------------|--------------|--------------|------------|--------------|---------|
-| Precision@10  | 0.0565       | 0.0557       | 0.0386     | 0.0608       | 0.1746  |
-| Recall@10     | 0.2905       | 0.2640       | 0.2385     | 0.2980       | 0.8948  |
-| MAP@10        | 0.1800       | 0.1632       | 0.1532     | 0.1910       | 0.8092  |
+| Precision@10  | 0.0565       | 0.0557       | 0.0389     | 0.0608       | 0.1746  |
+| Recall@10     | 0.2905       | 0.2640       | 0.2391     | 0.2980       | 0.8948  |
+| MAP@10        | 0.1800       | 0.1632       | 0.1527     | 0.1910       | 0.8092  |
 
 
 **Visual Assessment of TF-IFD Model**
