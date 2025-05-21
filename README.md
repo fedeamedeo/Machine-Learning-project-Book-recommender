@@ -62,4 +62,4 @@ The project offers an interactive interface using Streamlit and ipywidgets, allo
 
 By combining machine learning algorithms with interactive visualization, the Book Recommendation System provides a user-friendly platform for discovering new books tailored to individual preferences. Whether users are searching for popular titles from favorite publishers or exploring books by preferred authors, this system offers personalized recommendations to enhance their reading experience.
 
-Now you can try our amazing app and enjoy reading your taylo-made recommendated book while being impressed by power of Machin Learning!! 
+Now you can try our amazing app and enjoy reading your taylor-made recommended books while being impressed by the power of Machine Learning! 
