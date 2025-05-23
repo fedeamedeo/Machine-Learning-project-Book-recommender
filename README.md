@@ -58,7 +58,7 @@ Finally, to assess our recommender system in a more visual way, we display the r
 For this reason, we see our analysis as successful (as it worked quite well for all the users) and we decide to move on with the last part of the project, which involved putting into practice our work.
 
 
-**Interactive Recommendations**
+## Interactive Recommendations on Streamlit APP
 
 The project offers an interactive interface using Streamlit and ipywidgets, allowing users to explore specific books. The following is the link to access the exclusive app: https://machine-learning-project-book-recommender-v4jrgnjk2j4hnkhp42j6.streamlit.app/ . In addition to the previous API, we expanded the metadata with a stroger one, that included other variables. This is because we want the USER to have the best experience possible on our app. We therefore added many more details, such as the language, description of the book and, above all, the Book covers. 
 
