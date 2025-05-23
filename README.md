@@ -60,7 +60,7 @@ For this reason, we see our analysis as successful (as it worked quite well for 
 
 ## Interactive Recommendations on Streamlit APP
 
-The project offers an interactive interface using Streamlit and ipywidgets, allowing users to explore specific books. The following is the link to access the exclusive app: https://machine-learning-project-book-recommender-v4jrgnjk2j4hnkhp42j6.streamlit.app/ . In addition to the previous API, we expanded the metadata with a stroger one, that included other variables. This is because we want the USER to have the best experience possible on our app. We therefore added many more details, such as the language, description of the book and, above all, the Book covers. 
+The project offers an interactive interface using Streamlit and ipywidgets, allowing users to explore specific books. The following is the link to access the app: https://machine-learning-project-book-recommender-v4jrgnjk2j4hnkhp42j6.streamlit.app/ . In addition to the previous API, we expanded the metadata with a stronger one, that included other variables. This is because we want the USER to have the best experience possible on our app. We therefore added many more details, such as the language, description of the book and, above all, the Book covers. 
 
 By combining machine learning algorithms with interactive visualization, the Book Recommendation System provides a user-friendly platform for discovering new books tailored to individual preferences. Whether users are searching for popular titles from favorite publishers or exploring books by preferred authors, this system offers personalized recommendations to enhance their reading experience.
 
@@ -68,6 +68,6 @@ Now you can try our amazing app and enjoy reading your taylor-made recommended b
 
 ![App Interface](appimage.png)
 
-Here there is the example of looking for a specific word like : "chat" and the releted items founded. 
+Here is the example of looking for a specific word like : "chat" and the related items found. 
 
 ![App Interface](chat.png)
