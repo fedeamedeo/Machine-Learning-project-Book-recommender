@@ -67,3 +67,4 @@ By combining machine learning algorithms with interactive visualization, the Boo
 Now you can try our amazing app and enjoy reading your taylor-made recommended books while being impressed by the power of Machine Learning! 
 
 ![App Interface](appimage.png)
+![App Interface](chat.png)
