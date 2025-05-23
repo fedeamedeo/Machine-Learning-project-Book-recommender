@@ -67,4 +67,5 @@ By combining machine learning algorithms with interactive visualization, the Boo
 Now you can try our amazing app and enjoy reading your taylor-made recommended books while being impressed by the power of Machine Learning! 
 
 ![App Interface](appimage.png)
+Here there is the example of looking for a specific word like : "chat" and the releted items founded. 
 ![App Interface](chat.png)
