@@ -2,6 +2,8 @@
 
 Rank on Kaggle competition: #7 (0.1578) on 21.05
 
+Please find our YouTube video here: https://www.youtube.com/watch?v=cqcneOP8Xak
+
 This project aims to develop a personalized book recommender system. Using five different recommender models, the system analyzes implicit user interactions and book metadata to generate accurate and tailored suggestions.
 
 ## Project Workflow:
